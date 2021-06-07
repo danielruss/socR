@@ -6,6 +6,11 @@
 \usage{
 codes(x, code_column)
 }
+\arguments{
+\item{x}{A crosswalk of class xwalk}
+
+\item{code_column}{The column names for the desired codes.}
+}
 \description{
 returns the all the codes in column code_column
 }

@@ -6,6 +6,20 @@
 \usage{
 make_combined_crosswalk(xw1, xw2, xw1_from, xw1_to, xw2_from, xw2_to)
 }
+\arguments{
+\item{xw1}{- the first crosswalk}
+
+\item{xw2}{- the second crosswalk}
+
+\item{xw1_from}{- the column you want to crosswalk from in xw1}
+
+\item{xw1_to}{- the column of the intermediate codes in xw1}
+
+\item{xw2_from}{- the column of the intermediate codes in xw2}
+
+\item{xw2_to}{- the column of code you want to code to in xw2}
+}
 \description{
-Takes two crosswalks and combines them...
+Takes two crosswalks and combines them note that this takes tibbles
+not crosswalks.  This will change in a future release.
 }

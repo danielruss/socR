@@ -6,6 +6,9 @@
 \usage{
 bidirectional(x)
 }
+\arguments{
+\item{x}{A crosswalk of class xwalk}
+}
 \description{
 Is a crosswalk bidirectional?
 }

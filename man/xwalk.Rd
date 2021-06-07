@@ -6,6 +6,20 @@
 \usage{
 xwalk(dta, codes1, titles1, codes2, titles2, bidirectional = FALSE)
 }
+\arguments{
+\item{dta}{the data frame of the crosswalk.}
+
+\item{codes1}{Codes for the (Default) input coding system for crosswalking can be overridden if the xwalk is bidirectional}
+
+\item{titles1}{Titles for the (Default) input coding system.}
+
+\item{codes2}{Codes for the (Default) output coding system for crosswalking can be overridden if the xwalk is bidirectional}
+
+\item{titles2}{Titles for the (Default) output coding system.}
+
+\item{bidirectional}{Can we use this crosswalk in both directions? if true, you can supply the column names in the crosswalk function
+to code in the reverse direction.}
+}
 \description{
 takes a data frame (the crosswalk) and which columns are the codes and titles
 and create an xwalk object that can perform crosswalks...

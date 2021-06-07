@@ -6,6 +6,9 @@
 \usage{
 is.xwalk(x)
 }
+\arguments{
+\item{x}{A crosswalk of class xwalk}
+}
 \description{
 Is this object a crosswalk
 }
