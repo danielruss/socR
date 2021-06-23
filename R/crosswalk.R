@@ -31,10 +31,10 @@ combine_crosswalks<-function(xw1,xw2,xw1_from,xw1_to,xw2_from,xw2_to,add_xwalk_s
   from_codes <- dplyr::pull(xw1,rlang::ensym(xw1_from)) %>% unique()
 
   intermediate <-
-    crosswalk(codes = from_codes,xwalk = xw1,from_column = !!from_start, to_column = !!to_intermediate,add_xwalk_string_column)
+    crosswalk.1(codes = from_codes,xwalk = xw1,from_column = !!from_start, to_column = !!to_intermediate,add_xwalk_string_column)
   intermediate_codes <- dplyr::pull(intermediate,!!from_intermediate)
   final <-
-    crosswalk(codes=intermediate_codes, xwalk = xw2, from_column = !!from_intermediate,to_column = !!to_final,add_xwalk_string_column=TRUE)
+    crosswalk.1(codes=intermediate_codes, xwalk = xw2, from_column = !!from_intermediate,to_column = !!to_final,add_xwalk_string_column=TRUE)
 
 
   dplyr::bind_cols(intermediate[,1],final)
@@ -63,7 +63,7 @@ make_combined_crosswalk <- function(xw1,xw2,xw1_from,xw1_to,xw2_from,xw2_to){
 #'
 #' takes a data frame (the crosswalk) and which columns are the codes and titles
 #' and create an xwalk object that can perform crosswalks...
-#' @param dta the data frame of the crosswalk.
+#' @param dta the data frame of the crosswalk, or the filename/URL of a csv crosswalk file.
 #' @param codes1 Codes for the (Default) input coding system for crosswalking can be overridden if the xwalk is bidirectional
 #' @param titles1 Titles for the (Default) input coding system.
 #' @param codes2 Codes for the (Default) output coding system for crosswalking can be overridden if the xwalk is bidirectional
@@ -72,8 +72,12 @@ make_combined_crosswalk <- function(xw1,xw2,xw1_from,xw1_to,xw2_from,xw2_to){
 #' to code in the reverse direction.
 #' @export
 xwalk <- function(dta,codes1,titles1,codes2,titles2,bidirectional=FALSE){
-  if (missing(dta)) stop("xwalk require the crosswalk table (dta)")
+  if (missing(dta)) stop("xwalk requires either the crosswalk (dta)")
   if (missing(codes1) || missing(codes2)) stop("xwalk needs to know which columns are the codes")
+
+  if (typeof(dta)=="character"){
+    dta<-readr::read_csv(dta)
+  }
   c1_q <- rlang::ensym(codes1)
   c2_q <- rlang::ensym(codes2)
 
@@ -110,7 +114,6 @@ is.xwalk <- function(x) inherits(x,"xwalk")
 
 #' checks if a crosswalk is bidirectional
 #'
-#' @description
 #' Is a crosswalk bidirectional?
 #'
 #'
@@ -148,29 +151,27 @@ codes <- function(x,code_column){
 
 #' looks up all corresponding codes from a crosswalk
 #'
-#'  @description
-#'
 #' Takes a vector of codes and concordance table (crosswalk) and converts from one
 #' coding systems to the next.
 #'
-#' @param codes - the vector of codes that will be crosswalked
-#' @param xwalk - the concordance table.
-#' @param from_column - the column in the xwalk table for the codes of the starting coding system, if xwalk is of
+#' @param codes the vector of codes that will be crosswalked
+#' @param xwalk the concordance table.
+#' @param from_column the column in the xwalk table for the codes of the starting coding system, if xwalk is of
 #' class xwalk, and is unidirectional then this parameter is not needed.  If the xwalk if bidirectional,
 #' then the parameter is optional. The default is xwalk$codes1.  If xwalk is not of class xwalk, then this parameter
 #' is required
-#' @param to_column - the column in the xwalk table for the codes of the results coding system, if xwalk is of
+#' @param to_column the column in the xwalk table for the codes of the results coding system, if xwalk is of
 #' class xwalk, and is unidirectional then this parameter is not needed.  If the xwalk if bidirectional,
 #' then the parameter is optional. The default is xwalk$codes2.  If xwalk is not of class xwalk, then this parameter
 #' is required
-#' @param add_xwalk_string_column - boolean indicating whether a string equivalent should be added to the table
-#' @param unnest - boolean indicating that the data should have multiple lines if there are multiple resulting codes.
+#' @param add_xwalk_string_column boolean indicating whether a string equivalent should be added to the table
+#' @param unnest boolean indicating that the data should have multiple lines if there are multiple resulting codes.
 #' This is not recommended, because the one input code could be repeated multiple times.
 #' @importFrom magrittr %>%
 #' @importFrom rlang :=
 #' @export
 #'
-crosswalk<-function(codes,xwalk,from_column,to_column,add_xwalk_string_column=FALSE,unnest=FALSE){
+crosswalk.1 <- function(codes,xwalk,from_column,to_column,add_xwalk_string_column=FALSE,unnest=FALSE){
   dta <- xwalk
   if (is.xwalk(xwalk)){
     dta <- xwalk$data
@@ -200,4 +201,55 @@ crosswalk<-function(codes,xwalk,from_column,to_column,add_xwalk_string_column=FA
 
   if (unnest) tbl<-tidyr::unnest(tbl,to_column_str)
   invisible(tbl)
+}
+
+#' Use the concordance table (crosswalk) to convert from one
+#' coding system to another.
+#'
+#' @param codes the vector of codes that will be crosswalked
+#' @param xwalk the concordance table.
+#' @param from_column the column in the xwalk table for the codes of the starting coding system, if xwalk is of
+#' class xwalk, and is unidirectional then this parameter is not needed.  If the xwalk if bidirectional,
+#' then the parameter is optional. The default is xwalk$codes1.  If xwalk is not of class xwalk, then this parameter
+#' is required
+#' @param to_column to_column the column in the xwalk table for the codes of the results coding system, if xwalk is of
+#' class xwalk, and is unidirectional then this parameter is not needed.  If the xwalk if bidirectional,
+#' then the parameter is optional. The default is xwalk$codes2.  If xwalk is not of class xwalk, then this parameter
+#' is required
+#'
+#' @return an unnamed list of codes in the resulting coding system
+#' @export
+#'
+crosswalk <- function(codes,xwalk,from_column,to_column){
+  dta <- xwalk
+  if (is.xwalk(xwalk)){
+    dta <- xwalk$data
+  }
+
+  ## if you give me a crosswalk, and dont give me column names,
+  ## assume that from codes1 -> codes2
+  if (missing(from_column) && is.xwalk(xwalk) ){
+    from_column_str <- rlang::sym( xwalk$codes1 )
+    to_column_str <- rlang::sym( xwalk$codes2 )
+  }else{
+    ## quote the parameters -- they are not variables ...
+    from_column_str <- rlang::enquo(from_column)
+    to_column_str <- rlang::enquo(to_column)
+  }
+
+  codes %>% purrr::map( ~dplyr::filter(dta,!!from_column_str %in% .) %>% dplyr::pull(!!to_column_str) %>% unique() %>% sort())
+}
+
+#' convert a list column of codes to vector of string for display
+#'
+#' @param x codes column
+#'
+#' @return a vector a string concatenating all the codes
+#' @export
+#'
+#' @examples
+#' df <- tibble::tibble(soc2010_codes = list(c("11-1011","11-1021"),c("11-1000")))
+#' df <- dplyr::mutate(df,code_str=make_code_str(soc2010_codes))
+make_code_str <- function(x){
+  purrr::map_chr(x,paste0,collapse = " | ")
 }

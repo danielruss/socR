@@ -7,7 +7,7 @@
 xwalk(dta, codes1, titles1, codes2, titles2, bidirectional = FALSE)
 }
 \arguments{
-\item{dta}{the data frame of the crosswalk.}
+\item{dta}{the data frame of the crosswalk, or the filename/URL of a csv crosswalk file.}
 
 \item{codes1}{Codes for the (Default) input coding system for crosswalking can be overridden if the xwalk is bidirectional}
 
