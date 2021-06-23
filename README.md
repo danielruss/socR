@@ -19,4 +19,3 @@ library(devtools)
 install_github("danielruss/socR")
 ```
 
-I 
