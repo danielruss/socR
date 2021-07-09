@@ -8,8 +8,7 @@
 #' @export
 #'
 #' @examples
-#' x1 <- c("11-2031","Fred","11-3031")
-#' lookup_code(x1,soc2010_6digit$soc_code,soc2010_6digit$title)
+#' lookup_code( c("11-2031","Fred","11-3031") ,soc2010_6digit$soc_code,soc2010_6digit$title)
 lookup_code<-function(x,valid_codes,titles){
   titles[match(x,valid_codes)]
 }
