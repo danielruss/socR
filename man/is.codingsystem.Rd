@@ -4,7 +4,6 @@
 \alias{is.codingsystem}
 \title{checks if an object is a coding system}
 \usage{
-x <- codingsystem(soc2010_6digit$soc_code,soc2010_6digit$title,"US SOC 2010 6 digit")
 is.codingsystem(x)
 }
 \arguments{
@@ -12,4 +11,8 @@ is.codingsystem(x)
 }
 \description{
 Is this object a coding system
+}
+\examples{
+x <- codingsystem(soc2010_6digit$soc_code,soc2010_6digit$title,"US SOC 2010 6 digit")
+is.codingsystem(x)
 }

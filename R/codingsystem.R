@@ -24,7 +24,7 @@ codingsystem <- function(codes,titles,name=""){
 #' Is this object a coding system
 #'
 #' @param x object to test
-#' @usage
+#' @examples
 #' x <- codingsystem(soc2010_6digit$soc_code,soc2010_6digit$title,"US SOC 2010 6 digit")
 #' is.codingsystem(x)
 #' @export
@@ -55,6 +55,8 @@ is_valid <- function(code,system){
 #' @export
 #'
 #' @examples
+#' soc2010 <- codingsystem(soc2010_6digit$soc_code,soc2010_6digit$title,"US SOC 2010 6 digit")
+#' name(soc2010)
 name <- function(system){
   system$name
 }
@@ -69,8 +71,8 @@ name <- function(system){
 #' @export
 #'
 #' @examples
-#' lookup_code( c("11-2031","Fred","11-3031") ,soc2010_6digit$soc_code,soc2010_6digit$title)
-#lookup_code<-function(x,valid_codes,titles){
+#' soc2010 <- codingsystem(soc2010_6digit$soc_code,soc2010_6digit$title,"US SOC 2010 6 digit")
+#' lookup_code( c("11-2031","Fred","11-3031") , soc2010)
 lookup_code<-function(x,system){
   system$table$title[match(x,system$table$code)]
 }
