@@ -1,64 +1,3 @@
-#' Combine two crosswalks to produce a new crosswalk
-#'
-#' Takes two concordance tables (xw1 and xw2), where xw1 go from coding system one
-#' to an intermediary coding system, and xw2 goes from the intermediary coding system
-#' to coding system two.  The goal is to make one table that goes from coding system 1 to
-#' coding system 2.
-#'
-#'
-#' @param xw1 - crosswalk table 1
-#' @param xw2 - crosswalk table 2
-#' @param xw1_from - the column in the xw1 table for the starting coding system
-#' @param xw1_to - the column in the xw1 table for the intermediary coding system
-#' @param xw2_from - the column in the xw2 table for the intermediary coding system
-#' @param xw2_to - the column in the xw2 table for the final coding system
-#' @param add_xwalk_string_column - boolean indicating whether a string equivalent should be added to the table
-#' @importFrom magrittr %>%
-#' @importFrom rlang :=
-#' @export
-#'
-#' @examples
-#' noc_isco <- readr::read_csv("https://danielruss.github.io/codingsystems/noc2011_isco2008.csv")
-#' isco_soc <- readr::read_csv("https://danielruss.github.io/codingsystems/isco2008_soc2010.csv")
-#' combine_crosswalks(noc_isco,isco_soc,noc2011_code,isco2008_code,isco2008_code,soc2010_code)
-#'
-combine_crosswalks<-function(xw1,xw2,xw1_from,xw1_to,xw2_from,xw2_to,add_xwalk_string_column=TRUE){
-  from_start <- rlang::enquo(xw1_from)
-  to_intermediate <- rlang::enquo(xw1_to)
-  from_intermediate <- rlang::enquo(xw2_from)
-  to_final <- rlang::enquo(xw2_to)
-
-  from_codes <- dplyr::pull(xw1,rlang::ensym(xw1_from)) %>% unique()
-
-  intermediate <-
-    crosswalk.1(codes = from_codes,xwalk = xw1,from_column = !!from_start, to_column = !!to_intermediate,add_xwalk_string_column)
-  intermediate_codes <- dplyr::pull(intermediate,!!from_intermediate)
-  final <-
-    crosswalk.1(codes=intermediate_codes, xwalk = xw2, from_column = !!from_intermediate,to_column = !!to_final,add_xwalk_string_column=TRUE)
-
-
-  dplyr::bind_cols(intermediate[,1],final)
-}
-
-#' make a combined crosswalk
-#'
-#' Takes two crosswalks and combines them note that this takes tibbles
-#' not crosswalks.  This will change in a future release.
-#'
-#' @param xw1 - the first crosswalk
-#' @param xw2 - the second crosswalk
-#' @param xw1_from - the column you want to crosswalk from in xw1
-#' @param xw1_to - the column of the intermediate codes in xw1
-#' @param xw2_from - the column of the intermediate codes in xw2
-#' @param xw2_to - the column of code you want to code to in xw2
-#' @export
-make_combined_crosswalk <- function(xw1,xw2,xw1_from,xw1_to,xw2_from,xw2_to){
-  start_code <- rlang::enquo(xw1_from)
-  final_code <- rlang::enquo(xw2_to)
-  xw <- combine_crosswalks(xw1,xw2,!!start_code,!!rlang::enquo(xw1_to),!!rlang::enquo(xw2_from),!!final_code)
-  xw %>% dplyr::select(!!start_code,!!final_code) %>% tidyr::unnest(cols=!!final_code)
-}
-
 #' xwalk class constructor
 #'
 #' takes a data frame (the crosswalk) and which columns are the codes and titles
@@ -73,32 +12,119 @@ make_combined_crosswalk <- function(xw1,xw2,xw1_from,xw1_to,xw2_from,xw2_to){
 #' @export
 xwalk <- function(dta,codes1,titles1,codes2,titles2,bidirectional=FALSE){
   if (missing(dta)) stop("xwalk requires either the crosswalk (dta)")
-  if (missing(codes1) || missing(codes2)) stop("xwalk needs to know which columns are the codes")
 
   if (typeof(dta)=="character"){
     dta<-readr::read_csv(dta)
   }
-  c1_q <- rlang::ensym(codes1)
-  c2_q <- rlang::ensym(codes2)
+
+  # if you dont tell me which columns are the
+  # codes, use the default, which means you better
+  # only have 4 columns.
+  use_colnames = missing(codes1) || missing(codes2)
+  if ( use_colnames && ncol(dta)!=4 )
+    stop("xwalk needs to know which columns are the codes and cannot figure it out, please provide additional arguments code1 and code2")
 
   obj <- list(bidirectional=bidirectional)
-  obj$codes1 <-  rlang::as_string(c1_q)
-  obj$codes2 <-  rlang::as_string(c2_q)
 
-
-  if (!missing(titles1)){
-    t1_q <- rlang::ensym(titles1)
-    obj$title1  <-  rlang::as_string(t1_q)
+  if ( use_colnames ){
+    obj$codes1 <-  colnames(dta)[1]
+    obj$titles1 <-  colnames(dta)[2]
+    obj$codes2 <-  colnames(dta)[3]
+    obj$titles2 <-  colnames(dta)[4]
+  }else{
+    codes1 <- rlang::enquo(codes1)
+    obj$codes1 <- ifelse(rlang::quo_is_call(codes1),rlang::as_name(rlang::eval_tidy(codes1)),rlang::as_name(codes1))
+    codes2 <- rlang::enquo(codes2)
+    obj$codes2 <- ifelse(rlang::quo_is_call(codes2),rlang::as_name(rlang::eval_tidy(codes2)),rlang::as_name(codes2))
+    obj$titles1 <- ""
+    obj$titles2 <- ""
+    titles1 <- rlang::enquo(titles1)
+    if (!rlang::quo_is_missing(titles1)){
+      obj$titles1 <- ifelse(rlang::quo_is_call(titles1),rlang::as_name(rlang::eval_tidy(titles1)),rlang::as_name(titles1))
+    }
+    titles2 <- rlang::enquo(titles2)
+    if (!rlang::quo_is_missing(titles2)){
+      obj$titles2 <- ifelse(rlang::quo_is_call(titles2),rlang::as_name(rlang::eval_tidy(titles2)),rlang::as_name(titles2))
+    }
   }
-  if (!missing(titles2)){
-    t2_q <- rlang::ensym(titles2)
-    obj$title2  <-  rlang::as_string(t2_q)
-  }
 
-  obj$data <- dta %>% dplyr::select(obj$codes1,obj$title1,obj$codes2,obj$title2)
+  obj$data <- dta %>% dplyr::select(intersect(colnames(dta),c(obj$codes1,obj$titles1,obj$codes2,obj$titles2)))
   attr(obj, "class") <- "xwalk"
   obj
 }
+
+#' @export
+#' @importFrom utils head
+head.xwalk<-function(x,...){
+  utils::head(x$data)
+}
+
+#' Combine two crosswalks to produce a new crosswalk
+#'
+#' Takes two concordance tables (xw1 and xw2), where xw1 go from coding system one
+#' to an intermediary coding system, and xw2 goes from the intermediary coding system
+#' to coding system two.  The goal is to make one table that goes from coding system 1 to
+#' coding system 2.
+#'
+#'
+#' @param xw1 - crosswalk 1, either an xwalk object or a data.frame
+#' @param xw2 - crosswalk 2,  either an xwalk object or a data.frame
+#' @param xw1_from - (ignored if xw1 is an xwalk object) the column in the xw1 table for the starting coding system
+#' @param xw1_to - (ignored if xw1 is an xwalk object) the column in the xw1 table for the intermediary coding system
+#' @param xw2_from - (ignored if xw1 is an xwalk object) the column in the xw2 table for the intermediary coding system
+#' @param xw2_to - (ignored if xw1 is an xwalk object) the column in the xw2 table for the final coding system
+#' @param flatten - should the function unnest the data frame into many 1 code -1 code rows, or leave row 1 code to many codes.
+#' @importFrom magrittr %>%
+#' @importFrom rlang :=
+#' @export
+#'
+#' @examples
+#' # the noc_isco example has an extra column that confuses the parser, so I have to specify the parts.
+#' noc_isco <- xwalk("https://danielruss.github.io/codingsystems/noc2011_isco2008.csv",
+#'                   codes1 ="isco2008_code",titles1 = "isco2008_title",
+#'                   codes2 = "noc2011_code",titles2="noc2011_title")
+#' isco_soc <- xwalk("https://danielruss.github.io/codingsystems/isco2008_soc2010.csv")
+#' combine_crosswalks(noc_isco,isco_soc,noc2011_code,isco2008_code,isco2008_code,soc2010_code)
+#'
+combine_crosswalks<-function(xw1,xw2,xw1_from,xw1_to,xw2_from,xw2_to,flatten=TRUE){
+
+  ## the user should really use xwalks instead of data.frames
+  ## create the crosswalks..
+  if (is.data.frame(xw1)) xw1 <- xwalk(xw1,codes1=xw1_from,codes2=xw1_to)
+  if (is.data.frame(xw2)) xw2 <- xwalk(xw2,codes1=xw2_from,codes2=xw2_to)
+
+  if (!is.xwalk(xw1) || !is.xwalk(xw2)) {
+    if (!is.xwalk(xw1)) stop("Problem making a xwalk object out of xw1")
+    stop("Problem making a xwalk object out of xw2")
+  }
+
+
+  from_codes <- dplyr::pull(xw1$data,xw1$codes1) %>% unique()
+  intermediate_codes <- crosswalk(codes=from_codes,xwalk = xw1)
+  final_codes <- crosswalk(codes=intermediate_codes,xwalk = xw2)
+  tbl <- tibble::tibble( !!as.name(xw1$codes1):=from_codes,
+                         !!as.name(xw1$codes2):=intermediate_codes,
+                         !!as.name(paste0(xw1$codes2,"_str")):=make_code_str(!!as.name(xw1$codes2)),
+                         !!as.name(xw2$codes2):=final_codes,
+                         !!as.name(paste0(xw2$codes2,"_str")):=make_code_str(!!as.name(xw2$codes2))
+  )
+  new_xw <- xwalk(tbl,codes1=xw1$codes1,codes2 = xw2$codes2)
+  if (flatten){
+    print(xw1$titles)
+    new_xw$titles1 = xw1$titles1
+    new_xw$titles2 = xw2$titles2
+    code_map1 <- dplyr::pull(xw1$data,xw1$titles1,xw1$codes1)
+    code_map2 <- dplyr::pull(xw2$data,xw2$titles2,xw2$codes2)
+    new_xw$data <- new_xw$data %>%
+      dplyr::mutate(!!as.name(xw1$titles1) := dplyr::recode(!!as.name(new_xw$codes1),!!!code_map1) ) %>%
+      tidyr::unnest(!!as.name(xw2$codes2)) %>%
+      dplyr::mutate(!!as.name(xw2$titles2) := dplyr::recode(!!as.name(new_xw$codes2),!!!code_map2) ) %>%
+      dplyr::select(new_xw$codes1,new_xw$titles1,new_xw$codes2,new_xw$titles2)
+  }
+
+  new_xw
+}
+
 
 #' checks if an object is a crosswalk
 #'
@@ -130,6 +156,12 @@ bidirectional <- function(x) {
 #' @export
 dim.xwalk <- function(x) dim(x$data)
 
+#' @export
+print.xwalk <- function(x,...) {
+#  print(c("codes1: ",x$codes1," titles1: ",x$titles1,"==>","codes2: ",x$codes2," titles2: ",x$titles2))
+  print(x$data,...)
+}
+
 #' get the codes for a crosswalk,
 #'
 #' @description
@@ -148,60 +180,6 @@ codes <- function(x,code_column){
   x$data[[ cc ]]
 }
 
-
-#' looks up all corresponding codes from a crosswalk
-#'
-#' Takes a vector of codes and concordance table (crosswalk) and converts from one
-#' coding systems to the next.
-#'
-#' @param codes the vector of codes that will be crosswalked
-#' @param xwalk the concordance table.
-#' @param from_column the column in the xwalk table for the codes of the starting coding system, if xwalk is of
-#' class xwalk, and is unidirectional then this parameter is not needed.  If the xwalk if bidirectional,
-#' then the parameter is optional. The default is xwalk$codes1.  If xwalk is not of class xwalk, then this parameter
-#' is required
-#' @param to_column the column in the xwalk table for the codes of the results coding system, if xwalk is of
-#' class xwalk, and is unidirectional then this parameter is not needed.  If the xwalk if bidirectional,
-#' then the parameter is optional. The default is xwalk$codes2.  If xwalk is not of class xwalk, then this parameter
-#' is required
-#' @param add_xwalk_string_column boolean indicating whether a string equivalent should be added to the table
-#' @param unnest boolean indicating that the data should have multiple lines if there are multiple resulting codes.
-#' This is not recommended, because the one input code could be repeated multiple times.
-#' @importFrom magrittr %>%
-#' @importFrom rlang :=
-#' @export
-#'
-crosswalk.1 <- function(codes,xwalk,from_column,to_column,add_xwalk_string_column=FALSE,unnest=FALSE){
-  dta <- xwalk
-  if (is.xwalk(xwalk)){
-    dta <- xwalk$data
-  }
-
-  ## if you give me a crosswalk, and dont give me column names,
-  ## assume that from codes1 -> codes2
-  if (missing(from_column) && is.xwalk(xwalk) ){
-    from_column_str <- rlang::sym( xwalk$codes1 )
-    to_column_str <- rlang::sym( xwalk$codes2 )
-  }else{
-    ## quote the parameters -- they are not variables ...
-    from_column_str <- rlang::enquo(from_column)
-    to_column_str <- rlang::enquo(to_column)
-  }
-
-  xw_codes <-codes %>% purrr::map( ~dplyr::filter(dta,!!from_column_str %in% .) %>% dplyr::pull(!!to_column_str) %>% unique() %>% sort())
-  tbl <- tibble::tibble( !!from_column_str := codes, !!to_column_str := xw_codes )
-
-
-  if (add_xwalk_string_column){
-    str_col <- rlang::sym( paste0( rlang::as_name( from_column_str ),"_str" ) )
-    tbl <- tbl %>% dplyr::mutate(!!str_col := purrr::map_chr(!!from_column_str,~paste(.,collapse = " | "))  )
-    str_col <- rlang::sym( paste0( rlang::as_name( to_column_str ),"_str" ) )
-    tbl <- tbl %>% dplyr::mutate(!!str_col := purrr::map_chr(!!to_column_str,~paste(.,collapse = " | "))  )
-  }
-
-  if (unnest) tbl<-tidyr::unnest(tbl,to_column_str)
-  invisible(tbl)
-}
 
 #' Use the concordance table (crosswalk) to convert from one
 #' coding system to another.
@@ -225,20 +203,20 @@ crosswalk <- function(codes,xwalk,from_column,to_column){
   if (is.xwalk(xwalk)){
     dta <- xwalk$data
   }
-
   ## if you give me a crosswalk, and dont give me column names,
   ## assume that from codes1 -> codes2
   if (missing(from_column) && is.xwalk(xwalk) ){
-    from_column_str <- rlang::sym( xwalk$codes1 )
-    to_column_str <- rlang::sym( xwalk$codes2 )
+    from_column_sym <- rlang::sym( xwalk$codes1 )
+    to_column_sym <- rlang::sym( xwalk$codes2 )
   }else{
     ## quote the parameters -- they are not variables ...
-    from_column_str <- rlang::enquo(from_column)
-    to_column_str <- rlang::enquo(to_column)
+    from_column_sym <- rlang::enquo(from_column)
+    to_column_sym <- rlang::enquo(to_column)
   }
 
-  codes %>% purrr::map( ~dplyr::filter(dta,!!from_column_str %in% .) %>% dplyr::pull(!!to_column_str) %>% unique() %>% sort())
+  codes %>% purrr::map( ~dplyr::filter(dta,!!from_column_sym %in% .)  %>% dplyr::pull(!!to_column_sym)  %>% unique() %>% sort() )
 }
+
 
 #' convert a list column of codes to vector of string for display
 #'
@@ -253,3 +231,42 @@ crosswalk <- function(codes,xwalk,from_column,to_column){
 make_code_str <- function(x){
   purrr::map_chr(x,paste0,collapse = " | ")
 }
+
+#' convert a column from a list to a pipe-delimeted string for
+#' easy viewing..
+#'
+#' @param x a xwalk object
+#' @param col the column that you want to make a string
+#' @param newcol the new name of the column default= col_str
+#' @return
+#' a vector containing the string of concatenated occupational codes for each row
+#' @export
+#' @importFrom magrittr %>%
+#'
+add_code_str <- function(x,col,newcol){
+  if(!is.xwalk(x) || missing(col)) return;
+  col_name <- rlang::ensym(col)
+  newcol_name <- ifelse(missing(newcol),rlang::sym(paste0(rlang::as_string(col_name),"_str")))
+  x$data <- x$data %>% dplyr::mutate(!!newcol_name:=purrr::map_chr(!!col_name,paste0,collapse = " | "))
+  x
+}
+
+
+#'
+#' @title Calculates the Shannon entropy for a Crosswalk
+#' @param x The crosswalk
+#' @description
+#' The more potential codes that a crosswalk will allow an intial code to become, the higher
+#' the entropy.  The entropy (H) is given by \deqn{H = \Sigma p log p} where p = 1/n and n is the number of potential codes
+#' a single code can map to, natural logs are used in the calculation.
+#'
+#' @return the entropy
+#' @export
+#' @importFrom magrittr %>%
+xwalk_entropy <- function(x){
+  p<-0
+  x$data %>% dplyr::group_by(!!as.name(x$codes1)) %>%
+    dplyr::summarize(p=1/dplyr::n()) %>% dplyr::ungroup() %>%
+    dplyr::summarize(entropy=sum(-p*log(p))) %>% tibble::deframe()
+}
+
