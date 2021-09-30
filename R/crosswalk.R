@@ -9,12 +9,13 @@
 #' @param titles2 Titles for the (Default) output coding system.
 #' @param bidirectional Can we use this crosswalk in both directions? if true, you can supply the column names in the crosswalk function
 #' to code in the reverse direction.
+#' @param ... parameters passed to read_csv
 #' @export
-xwalk <- function(dta,codes1,titles1,codes2,titles2,bidirectional=FALSE){
+xwalk <- function(dta,codes1,titles1,codes2,titles2,bidirectional=FALSE,...){
   if (missing(dta)) stop("xwalk requires either the crosswalk (dta)")
 
   if (typeof(dta)=="character"){
-    dta<-readr::read_csv(dta)
+    dta<-readr::read_csv(dta,...)
   }
 
   # if you dont tell me which columns are the
