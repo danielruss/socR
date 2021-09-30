@@ -239,8 +239,9 @@ make_code_str <- function(x){
 #' @param x a xwalk object
 #' @param col the column that you want to make a string
 #' @param newcol the new name of the column default= col_str
-#' @return
-#' a vector containing the string of concatenated occupational codes for each row
+#'
+#' @return a vector containing the string of concatenated occupational codes for each row
+#'
 #' @export
 #' @importFrom magrittr %>%
 #'
@@ -249,7 +250,7 @@ add_code_str <- function(x,col,newcol){
   col_name <- rlang::ensym(col)
   newcol_name <- ifelse(missing(newcol),rlang::sym(paste0(rlang::as_string(col_name),"_str")))
   x$data <- x$data %>% dplyr::mutate(!!newcol_name:=purrr::map_chr(!!col_name,paste0,collapse = " | "))
-  x
+  return(x)
 }
 
 
