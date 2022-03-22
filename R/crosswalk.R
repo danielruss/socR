@@ -2,7 +2,7 @@
 #'
 #' takes a data frame (the crosswalk) and which columns are the codes and titles
 #' and create an xwalk object that can perform crosswalks...
-#' @param dta the data frame of the crosswalk, or the filename/URL of a csv crosswalk file.
+#' @param dta the data frame of the crosswalk, or the filename/URL of a csv crosswalk file or the filename of an excel file.
 #' @param codes1 Codes for the (Default) input coding system for crosswalking can be overridden if the xwalk is bidirectional
 #' @param titles1 Titles for the (Default) input coding system.
 #' @param codes2 Codes for the (Default) output coding system for crosswalking can be overridden if the xwalk is bidirectional
@@ -15,7 +15,15 @@ xwalk <- function(dta,codes1,titles1,codes2,titles2,bidirectional=FALSE,...){
   if (missing(dta)) stop("xwalk requires either the crosswalk (dta)")
 
   if (typeof(dta)=="character"){
-    dta<-readr::read_csv(dta,...)
+    dta <- switch(
+      tools::file_ext(dta),
+      "csv" = readr::read_csv(dta,...),
+      "tsv" = readr::read_tsv(dta,...),
+      "xls" = readxl::read_excel(dta,...),
+      "xlsx"= readxl::read_excel(dta,...),
+      stop("xwalk can only handle csv, tsv, or excel files by the file name")
+      )
+    dta
   }
 
   # if you dont tell me which columns are the
