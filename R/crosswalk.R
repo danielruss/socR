@@ -17,8 +17,8 @@ xwalk <- function(dta,codes1,titles1,codes2,titles2,bidirectional=FALSE,...){
   if (typeof(dta)=="character"){
     dta <- switch(
       tools::file_ext(dta),
-      "csv" = readr::read_csv(dta,...),
-      "tsv" = readr::read_tsv(dta,...),
+      "csv" = readr::read_csv(dta,col_types = 'c',...),
+      "tsv" = readr::read_tsv(dta,col_types = 'c',...),
       "xls" = readxl::read_excel(dta,...),
       "xlsx"= readxl::read_excel(dta,...),
       stop("xwalk can only handle csv, tsv, or excel files by the file name")
