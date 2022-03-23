@@ -18,7 +18,7 @@ valid_code <- function(codeList){
 #'
 #' @return a boolean vector
 #' @export
-is_valid_6digit_soc2010 <- valid_code(soc2010_6digit$soc_code)
+is_valid_6digit_soc2010 <- valid_code(socR::soc2010_6digit$soc_code)
 
 #' Is a code valid 4-digit noc 2011 code?
 #'
@@ -26,7 +26,7 @@ is_valid_6digit_soc2010 <- valid_code(soc2010_6digit$soc_code)
 #' @param code a character vector of noc 2011 codes
 #' @return a boolean vector
 #' @export
-is_valid_4digit_noc2011<- valid_code(noc2011_4digit$noc_code)
+is_valid_4digit_noc2011<- valid_code(socR::noc2011_4digit$noc_code)
 
 
 
