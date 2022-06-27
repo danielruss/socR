@@ -25,3 +25,16 @@
 #' @source \url{https://danielruss.github.io/codingsystems/noc_2011_4d.csv}
 #' @source \url{https://www.statcan.gc.ca/eng/subjects/standard/noc/2011/index}
 "noc2011_4digit"
+
+#' SOC 1980 complete classification system
+#'
+#' US SOC 1980 classification system
+#'
+#' @format
+#' \describe{
+#' \item{soc1980_code}{the n-digit soc 1980}
+#' \item{title}{a short definition of the code}
+#' }
+#'
+#' @source \url{https://danielruss.github.io/codingsystems/soc1980.csv}
+"soc1980_all"

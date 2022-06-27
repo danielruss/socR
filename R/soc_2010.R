@@ -29,7 +29,6 @@ is_valid_6digit_soc2010 <- valid_code(socR::soc2010_6digit$soc_code)
 is_valid_4digit_noc2011<- valid_code(socR::noc2011_4digit$noc_code)
 
 
-
 #' Standardize US SOC 1980 codes
 #'
 #' US SOC 1980 codes are often written in none stand form (e.g 4600 instead of 46-47).  This function
@@ -56,3 +55,14 @@ standardize_soc1980_codes <- function(codes){
 
   dplyr::recode(codes,!!!code_map)
 }
+
+#' Is a code valid soc 1980 code?
+#'
+#' checks to see if a code is a valid standard soc1980 code
+#' @param code a character vector of soc1980 codes
+#' @return a boolean vector
+#' @export
+#'
+#' @seealso \code{\link{standardize_soc1980_codes}}
+is_valid_soc1980<- valid_code(soc1980_all$soc1980_code)
+

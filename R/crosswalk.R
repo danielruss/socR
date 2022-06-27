@@ -258,7 +258,7 @@ add_code_str <- function(x,col,newcol){
   col_name <- rlang::ensym(col)
   newcol_name <- ifelse(missing(newcol),rlang::sym(paste0(rlang::as_string(col_name),"_str")))
   x$data <- x$data %>% dplyr::mutate(!!newcol_name:=purrr::map_chr(!!col_name,paste0,collapse = " | "))
-  return(x)
+  x
 }
 
 
@@ -273,6 +273,7 @@ add_code_str <- function(x,col,newcol){
 #' @return the entropy
 #' @export
 #' @importFrom magrittr %>%
+#' @importFrom rlang .data
 xwalk_entropy <- function(x){
   p<-0
   x$data %>% dplyr::group_by(!!as.name(x$codes1)) %>%
@@ -280,3 +281,15 @@ xwalk_entropy <- function(x){
     dplyr::summarize(entropy=sum(-p*log(p))) %>% tibble::deframe()
 }
 
+multi_hot_encoder<-function(all_codes){
+  all_the_codes <- all_codes %>% unique %>% unname %>% tibble::enframe(name="index", value="code")
+
+  transform <- function(codes){
+    res <- logical(nrow(codes))
+    res <- all_the_codes %>% dplyr::filter(.data$code %in% codes) %>%
+      dplyr::pull(.data$index) %>%
+      purrr::reduce(function(old,indx){ old[indx]=1;return(old) }, .init=res)
+    res
+  }
+  list(transform=transform)
+}

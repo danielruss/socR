@@ -1,7 +1,7 @@
 Package: socR
 Type: Package
 Title: Useful functions for working with occupation coding
-Version: 0.1.4
+Version: 0.1.5
 Authors@R: person("Daniel","Russ", email="druss@mail.nih.gov",role=c("aut","cre"))
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: A set of functions that I find useful in my research
@@ -20,4 +20,8 @@ Imports:
     readr,
     stringr,
     httr,
-    digest
+    digest,
+    readxl,
+    DBI,
+    RSQLite,
+    dbplyr

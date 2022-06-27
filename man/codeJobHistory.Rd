@@ -29,10 +29,10 @@ a results tibble similar to the web-based version of SOCcer (https://soccer.nci.
 Please use the web-based version for handling large jobs.
 }
 \examples{
-
+\dontrun{
 soccer_results <- codeJobHistory("epidemiologist")
 jobs <- tibble::tibble(title=c("chemist","farmer","data scientist"),
                        task=rep("",3),industry=rep("",3))
 soccer_results_3 <- purrr::pmap_dfr(jobs,codeJobHistory,n=20)
-
+}
 }
