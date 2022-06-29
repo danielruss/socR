@@ -241,26 +241,6 @@ make_code_str <- function(x){
   purrr::map_chr(x,paste0,collapse = " | ")
 }
 
-#' convert a column from a list to a pipe-delimeted string for
-#' easy viewing..
-#'
-#' @param x a xwalk object
-#' @param col the column that you want to make a string
-#' @param newcol the new name of the column default= col_str
-#'
-#' @return a vector containing the string of concatenated occupational codes for each row
-#'
-#' @export
-#' @importFrom magrittr %>%
-#'
-add_code_str <- function(x,col,newcol){
-  if(!is.xwalk(x) || missing(col)) return;
-  col_name <- rlang::ensym(col)
-  newcol_name <- ifelse(missing(newcol),rlang::sym(paste0(rlang::as_string(col_name),"_str")))
-  x$data <- x$data %>% dplyr::mutate(!!newcol_name:=purrr::map_chr(!!col_name,paste0,collapse = " | "))
-  x
-}
-
 
 #'
 #' @title Calculates the Shannon entropy for a Crosswalk

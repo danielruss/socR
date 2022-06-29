@@ -26,9 +26,9 @@ load_socassign_db <- function(fname,addSrc=FALSE){
     tidyr::pivot_wider(values_from = .data$value,names_from = .data$title) %>%
     dplyr::select(-.data$row) %>% dplyr::mutate(Id=as.integer(.data$Id)) %>%
     tidyr::pivot_longer(.data$JobTitle:.data$Score_10)
-  x2 <-  dplyr::bind_rows(.data$x1,.data$x2)
+  x2 <-  dplyr::bind_rows(x1,x2)
 
-  x2 <- tidyr::pivot_wider(.data$x2,names_from = .data$name,values_from = .data$value) %>%
+  x2 <- tidyr::pivot_wider(x2,names_from = .data$name,values_from = .data$value) %>%
     dplyr::select(.data$Id, .data$JobTitle,.data$SIC,.data$JobTask,.data$CODE1:.data$CODE3)
   if (addSrc){
     x2 <-  dplyr::mutate(x2,src=basename(fname))

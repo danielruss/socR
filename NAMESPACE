@@ -3,7 +3,6 @@
 S3method(dim,xwalk)
 S3method(head,xwalk)
 S3method(print,xwalk)
-export(add_code_str)
 export(bidirectional)
 export(codeJobHistory)
 export(codes)
