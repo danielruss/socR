@@ -208,24 +208,33 @@ codes <- function(x,code_column){
 #' @export
 #'
 crosswalk <- function(codes,xwalk,from_column,to_column){
-  dta <- xwalk
-  if (is.xwalk(xwalk)){
-    dta <- xwalk$data
+  if ( (is.data.frame(xwalk) && (missing(from_column)|| missing(to_column)) ) && !is.xwalk(xwalk) ) {
+    stop("crosswalk needs either a crosswalk object, or a dataframe along with the from and from columns")
   }
-  ## if you give me a crosswalk, and dont give me column names,
-  ## assume that from codes1 -> codes2
-  if (missing(from_column) && is.xwalk(xwalk) ){
+
+  xw_data = xwalk
+  if (socR::is.xwalk(xwalk)){
+    xw_data <- xwalk$data
+  }
+
+  if (missing(from_column)){
     from_column_sym <- rlang::sym( xwalk$codes1 )
-    to_column_sym <- rlang::sym( xwalk$codes2 )
+    from_column_str <- xwalk$codes1
+    to_column_sym   <- rlang::sym( xwalk$codes2 )
+    to_column_str   <- xwalk$codes2
   }else{
     ## quote the parameters -- they are not variables ...
     from_column_sym <- rlang::enquo(from_column)
+    from_column_str <- rlang::quo_name(from_column_sym)
     to_column_sym <- rlang::enquo(to_column)
+    to_column_str <- rlang::quo_name(to_column_sym)
   }
 
-  codes %>% purrr::map( ~dplyr::filter(dta,!!from_column_sym %in% .)  %>% dplyr::pull(!!to_column_sym)  %>% unique() %>% sort() )
+  xw <- xw_data %>% group_by({{from_column_sym}}) %>% summarise({{to_column_sym}} :=list({{to_column_sym}}))
+  enframe(codes,name=NULL,value=from_column_str)%>% left_join(xw,by=from_column_str) %>%
+    mutate({{to_column_sym}} := modify_if({{to_column_sym}},is.null,~character(0)))%>%
+    pull({{to_column_sym}} )
 }
-
 
 #' convert a list column of codes to vector of string for display
 #'
