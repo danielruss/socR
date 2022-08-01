@@ -40,14 +40,16 @@ codeJobHistory <- function(title,task="",industry="",...,n=10){
 
   raw <- httr::GET(url)
   httr::warn_for_status(raw)
-  httr::content(raw)
+
   res <- httr::content(raw,as = "parsed",type="application/json") %>%
-   purrr::map_dfr(~.x) %>% dplyr::mutate(rank=dplyr::row_number()) %>%
-   dplyr::rename(soc2010=.data$code) %>%
-   tidyr::pivot_wider(id_cols = c(.data$soc2010,.data$score),values_from = c(.data$soc2010,.data$score),names_from = .data$rank)
+    dplyr::bind_rows() %>% dplyr::mutate(Id=1,rank=dplyr::row_number()) %>%
+    dplyr::rename(soc2010=.data$code) %>%
+    tidyr::pivot_wider(id_cols = .data$Id, values_from = c(.data$soc2010,.data$score),names_from = .data$rank) %>%
+    dplyr::select(!.data$Id)
+
   cols <- colnames(res)
   cols <- cols[order(as.integer(stringr::str_extract(cols,"\\d+$")))]
   res <- res[,cols]
-  cbind(dta,res)
+  dplyr::bind_cols(dta,res)
 }
 
