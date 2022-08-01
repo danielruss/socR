@@ -12,7 +12,7 @@ codesAgree(codes, reviewer)
 \item{reviewer}{reviewer's code -- "gold" standard}
 }
 \value{
-TRUE if the codes are in the reviewer
+TRUE if the codes are in the reviewer otherwise FALSE
 }
 \description{
 Compares if a vector of codes is in a vector of reviewer
@@ -23,6 +23,9 @@ Particularly useful when combined with purrr::map_lgl
 }
 \examples{
 x <- '11-1011'
+y <- c('11-1011','11-1031')
 codesAgree(x,c("11-1011","11-1021"))
+codesAgree(y,c("11-1021","11-1031"))
 codesAgree(x,c("13-1011","11-1021"))
+codesAgree(y,c("13-1011","11-1021"))
 }

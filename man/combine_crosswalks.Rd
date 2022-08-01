@@ -4,30 +4,12 @@
 \alias{combine_crosswalks}
 \title{Combine two crosswalks to produce a new crosswalk}
 \usage{
-combine_crosswalks(
-  xw1,
-  xw2,
-  xw1_from,
-  xw1_to,
-  xw2_from,
-  xw2_to,
-  flatten = TRUE
-)
+combine_crosswalks(xw1, xw2)
 }
 \arguments{
 \item{xw1}{- crosswalk 1, either an xwalk object or a data.frame}
 
 \item{xw2}{- crosswalk 2,  either an xwalk object or a data.frame}
-
-\item{xw1_from}{- (ignored if xw1 is an xwalk object) the column in the xw1 table for the starting coding system}
-
-\item{xw1_to}{- (ignored if xw1 is an xwalk object) the column in the xw1 table for the intermediary coding system}
-
-\item{xw2_from}{- (ignored if xw1 is an xwalk object) the column in the xw2 table for the intermediary coding system}
-
-\item{xw2_to}{- (ignored if xw1 is an xwalk object) the column in the xw2 table for the final coding system}
-
-\item{flatten}{- should the function unnest the data frame into many 1 code -1 code rows, or leave row 1 code to many codes.}
 }
 \description{
 Takes two concordance tables (xw1 and xw2), where xw1 go from coding system one
@@ -36,11 +18,11 @@ to coding system two.  The goal is to make one table that goes from coding syste
 coding system 2.
 }
 \examples{
-# the noc_isco example has an extra column that confuses the parser, so I have to specify the parts.
+# the noc_isco example has an extra column that confuses the parser,
+# so I have to specify the parts or skip the last column.
 noc_isco <- xwalk("https://danielruss.github.io/codingsystems/noc2011_isco2008.csv",
-                  codes1 ="isco2008_code",titles1 = "isco2008_title",
-                  codes2 = "noc2011_code",titles2="noc2011_title")
+                   col_types = "cccc-")
 isco_soc <- xwalk("https://danielruss.github.io/codingsystems/isco2008_soc2010.csv")
-combine_crosswalks(noc_isco,isco_soc,noc2011_code,isco2008_code,isco2008_code,soc2010_code)
+combine_crosswalks(noc_isco,isco_soc)
 
 }

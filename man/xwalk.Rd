@@ -4,7 +4,16 @@
 \alias{xwalk}
 \title{xwalk class constructor}
 \usage{
-xwalk(dta, codes1, titles1, codes2, titles2, bidirectional = FALSE, ...)
+xwalk(
+  dta,
+  codes1,
+  titles1,
+  codes2,
+  titles2,
+  bidirectional = FALSE,
+  col_types = ifelse(grepl("\\\\.xlsx?$", dta), "text", "c"),
+  ...
+)
 }
 \arguments{
 \item{dta}{the data frame of the crosswalk, or the filename/URL of a csv crosswalk file or the filename of an excel file.}
@@ -20,7 +29,9 @@ xwalk(dta, codes1, titles1, codes2, titles2, bidirectional = FALSE, ...)
 \item{bidirectional}{Can we use this crosswalk in both directions? if true, you can supply the column names in the crosswalk function
 to code in the reverse direction.}
 
-\item{...}{parameters passed to read_csv}
+\item{col_types}{set the default col_type parameter for read_csv/read_excel}
+
+\item{...}{additional parameters passed to read_csv}
 }
 \description{
 takes a data frame (the crosswalk) and which columns are the codes and titles

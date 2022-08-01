@@ -9,20 +9,21 @@
 #' @param titles2 Titles for the (Default) output coding system.
 #' @param bidirectional Can we use this crosswalk in both directions? if true, you can supply the column names in the crosswalk function
 #' to code in the reverse direction.
-#' @param ... parameters passed to read_csv
+#' @param col_types set the default col_type parameter for read_csv/read_excel
+#' @param ... additional parameters passed to read_csv
 #' @export
-xwalk <- function(dta,codes1,titles1,codes2,titles2,bidirectional=FALSE,...){
+xwalk <- function(dta,codes1,titles1,codes2,titles2,bidirectional=FALSE,col_types=ifelse(grepl("\\.xlsx?$",dta),"text","c"),...){
   if (missing(dta)) stop("xwalk requires either the crosswalk (dta)")
 
   if (typeof(dta)=="character"){
     dta <- switch(
       tools::file_ext(dta),
-      "csv" = readr::read_csv(dta,col_types = 'c',...),
-      "tsv" = readr::read_tsv(dta,col_types = 'c',...),
-      "xls" = readxl::read_excel(dta,...),
-      "xlsx"= readxl::read_excel(dta,...),
+      "csv" = readr::read_csv(dta,col_types = col_types,...),
+      "tsv" = readr::read_tsv(dta,col_types = col_types,...),
+      "xls" = readxl::read_excel(dta,col_types = col_types,...),
+      "xlsx"= readxl::read_excel(dta,col_types = col_types,...),
       stop("xwalk can only handle csv, tsv, or excel files by the file name")
-      )
+    )
     dta
   }
 
@@ -78,60 +79,39 @@ head.xwalk<-function(x,...){
 #'
 #' @param xw1 - crosswalk 1, either an xwalk object or a data.frame
 #' @param xw2 - crosswalk 2,  either an xwalk object or a data.frame
-#' @param xw1_from - (ignored if xw1 is an xwalk object) the column in the xw1 table for the starting coding system
-#' @param xw1_to - (ignored if xw1 is an xwalk object) the column in the xw1 table for the intermediary coding system
-#' @param xw2_from - (ignored if xw1 is an xwalk object) the column in the xw2 table for the intermediary coding system
-#' @param xw2_to - (ignored if xw1 is an xwalk object) the column in the xw2 table for the final coding system
-#' @param flatten - should the function unnest the data frame into many 1 code -1 code rows, or leave row 1 code to many codes.
 #' @importFrom magrittr %>%
 #' @importFrom rlang :=
 #' @export
 #'
 #' @examples
-#' # the noc_isco example has an extra column that confuses the parser, so I have to specify the parts.
+#' # the noc_isco example has an extra column that confuses the parser,
+#' # so I have to specify the parts or skip the last column.
 #' noc_isco <- xwalk("https://danielruss.github.io/codingsystems/noc2011_isco2008.csv",
-#'                   codes1 ="isco2008_code",titles1 = "isco2008_title",
-#'                   codes2 = "noc2011_code",titles2="noc2011_title")
+#'                    col_types = "cccc-")
 #' isco_soc <- xwalk("https://danielruss.github.io/codingsystems/isco2008_soc2010.csv")
-#' combine_crosswalks(noc_isco,isco_soc,noc2011_code,isco2008_code,isco2008_code,soc2010_code)
+#' combine_crosswalks(noc_isco,isco_soc)
 #'
-combine_crosswalks<-function(xw1,xw2,xw1_from,xw1_to,xw2_from,xw2_to,flatten=TRUE){
+combine_crosswalks<-function(xw1,xw2){
 
-  ## the user should really use xwalks instead of data.frames
-  ## create the crosswalks..
-  if (is.data.frame(xw1)) xw1 <- xwalk(xw1,codes1=xw1_from,codes2=xw1_to)
-  if (is.data.frame(xw2)) xw2 <- xwalk(xw2,codes1=xw2_from,codes2=xw2_to)
 
-  if (!is.xwalk(xw1) || !is.xwalk(xw2)) {
-    if (!is.xwalk(xw1)) stop("Problem making a xwalk object out of xw1")
-    stop("Problem making a xwalk object out of xw2")
+  if (!is.xwalk(xw1)) stop("crosswalk1 is not an xwalk object. ")
+  if (!is.xwalk(xw2)) stop("crosswalk2 is not an xwalk object. ")
+
+  if (xw1$codes2 != xw2$codes1){
+    stop("The two xwalk objects don't map between a common coding system: ",xw1$codes2," != ",xw2$codes1)
   }
 
+  dta = xw1$data
 
-  from_codes <- dplyr::pull(xw1$data,xw1$codes1) %>% unique()
-  intermediate_codes <- crosswalk(codes=from_codes,xwalk = xw1)
-  final_codes <- crosswalk(codes=intermediate_codes,xwalk = xw2)
-  tbl <- tibble::tibble( !!as.name(xw1$codes1):=from_codes,
-                         !!as.name(xw1$codes2):=intermediate_codes,
-                         !!as.name(paste0(xw1$codes2,"_str")):=make_code_str(!!as.name(xw1$codes2)),
-                         !!as.name(xw2$codes2):=final_codes,
-                         !!as.name(paste0(xw2$codes2,"_str")):=make_code_str(!!as.name(xw2$codes2))
-  )
-  new_xw <- xwalk(tbl,codes1=xw1$codes1,codes2 = xw2$codes2)
-  if (flatten){
-    print(xw1$titles)
-    new_xw$titles1 = xw1$titles1
-    new_xw$titles2 = xw2$titles2
-    code_map1 <- dplyr::pull(xw1$data,xw1$titles1,xw1$codes1)
-    code_map2 <- dplyr::pull(xw2$data,xw2$titles2,xw2$codes2)
-    new_xw$data <- new_xw$data %>%
-      dplyr::mutate(!!as.name(xw1$titles1) := dplyr::recode(!!as.name(new_xw$codes1),!!!code_map1) ) %>%
-      tidyr::unnest(!!as.name(xw2$codes2)) %>%
-      dplyr::mutate(!!as.name(xw2$titles2) := dplyr::recode(!!as.name(new_xw$codes2),!!!code_map2) ) %>%
-      dplyr::select(new_xw$codes1,new_xw$titles1,new_xw$codes2,new_xw$titles2)
-  }
+  xw_data <- dta %>%
+    # crosswalk the codes
+    dplyr::mutate(!!as.name(xw2$codes2):=crosswalk(!!as.name(xw2$codes1),xwalk = xw2)) %>%
+    tidyr::unnest(xw2$codes2) %>%
+    dplyr::distinct(!!as.name(xw1$codes1),!!as.name(xw1$titles1),!!as.name(xw2$codes2)) %>%
+    dplyr::left_join( dplyr::distinct(xw2$data[,c(xw2$codes2,xw2$titles2)]),by=xw2$codes2) %>%
+    dplyr::arrange(!!as.name(xw1$codes1),!!as.name(xw2$codes2))
 
-  new_xw
+  return(xwalk(xw_data,codes1=xw1$codes1,titles1 = xw1$titles1,codes2 = xw2$codes2,titles2 = xw2$titles2))
 }
 
 
@@ -167,7 +147,7 @@ dim.xwalk <- function(x) dim(x$data)
 
 #' @export
 print.xwalk <- function(x,...) {
-#  print(c("codes1: ",x$codes1," titles1: ",x$titles1,"==>","codes2: ",x$codes2," titles2: ",x$titles2))
+  #  print(c("codes1: ",x$codes1," titles1: ",x$titles1,"==>","codes2: ",x$codes2," titles2: ",x$titles2))
   print(x$data,...)
 }
 
@@ -230,10 +210,11 @@ crosswalk <- function(codes,xwalk,from_column,to_column){
     to_column_str <- rlang::quo_name(to_column_sym)
   }
 
-  xw <- xw_data %>% group_by({{from_column_sym}}) %>% summarise({{to_column_sym}} :=list({{to_column_sym}}))
-  enframe(codes,name=NULL,value=from_column_str)%>% left_join(xw,by=from_column_str) %>%
-    mutate({{to_column_sym}} := modify_if({{to_column_sym}},is.null,~character(0)))%>%
-    pull({{to_column_sym}} )
+  xw <- xw_data %>% dplyr::group_by({{from_column_sym}}) %>% dplyr::summarise({{to_column_sym}} :=list({{to_column_sym}}))
+  tibble::enframe(codes,name=NULL,value=from_column_str) %>%
+    dplyr::left_join(xw,by=from_column_str) %>%
+    dplyr::mutate({{to_column_sym}} := purrr::modify_if({{to_column_sym}},is.null,~character(0)))%>%
+    dplyr::pull({{to_column_sym}} )
 }
 
 #' convert a list column of codes to vector of string for display

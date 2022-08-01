@@ -9,13 +9,16 @@
 #' @param codes codes to compare
 #' @param reviewer reviewer's code -- "gold" standard
 #'
-#' @return TRUE if the codes are in the reviewer
+#' @return TRUE if the codes are in the reviewer otherwise FALSE
 #' @export
 #'
 #' @examples
 #' x <- '11-1011'
+#' y <- c('11-1011','11-1031')
 #' codesAgree(x,c("11-1011","11-1021"))
+#' codesAgree(y,c("11-1021","11-1031"))
 #' codesAgree(x,c("13-1011","11-1021"))
+#' codesAgree(y,c("13-1011","11-1021"))
 codesAgree <- function(codes, reviewer){
-  return(codes %in% reviewer)
+  return( any(codes %in% reviewer) )
 }
