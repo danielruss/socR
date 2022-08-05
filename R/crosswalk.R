@@ -66,13 +66,13 @@ xwalk <- function(dta,codes1,titles1,codes2,titles2,bidirectional=FALSE,col_type
 #' @export
 #' @importFrom utils head
 head.xwalk<-function(x,...){
-  utils::head(x$data)
+  utils::head(x$data,...)
 }
 
 #' @export
 #' @importFrom utils tail
 tail.xwalk<-function(x,...){
-  utils::tail(x$data)
+  utils::tail(x$data,...)
 }
 
 #' Combine two crosswalks to produce a new crosswalk
