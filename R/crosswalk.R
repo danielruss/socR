@@ -69,6 +69,12 @@ head.xwalk<-function(x,...){
   utils::head(x$data)
 }
 
+#' @export
+#' @importFrom utils tail
+tail.xwalk<-function(x,...){
+  utils::tail(x$data)
+}
+
 #' Combine two crosswalks to produce a new crosswalk
 #'
 #' Takes two concordance tables (xw1 and xw2), where xw1 go from coding system one
