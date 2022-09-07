@@ -254,9 +254,9 @@ make_code_str <- function(x){
 #' @importFrom rlang .data
 xwalk_entropy <- function(x) {
   x$data %>% dplyr::group_by(!!as.name(x$codes1)) %>%
-    dplyr::summarize(n=n()) %>%
-    summarise(entropy=sum(-log(1/n))) %>%
-    pull(entropy)
+    dplyr::summarize(n=dplyr::n()) %>%
+    dplyr::summarise(entropy=sum(-log(1/.data$n))) %>%
+    dplyr::pull(.data$entropy)
 }
 
 multi_hot_encoder<-function(all_codes){

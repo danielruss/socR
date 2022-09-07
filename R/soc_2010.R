@@ -1,5 +1,27 @@
+#' Is valid code
+#'
+#' check whether a code is valid
+#'
+#' valid_code is a functional that create a function that check
+#' if a vector of codes is valid
+#'
+#' is_valid_4digit_soc1980, is_valid_6digit_soc2010 and is_valid_4digit_noc2011 were made using
+#' valid_code functional.
+#'
+#' @param codeList a vector of valid codes
+#' @param code a vector of codes to check against the vector of valid codes
+#'
+#' @return valid_code returns a function. The functions (e.g. is_valid_soc2010)
+#' return a logic vector representing if the codes are valid.
+#' @export
+#'
+#' @seealso [standardize_soc1980_codes()]
+#'
+#' @examples
+#' is_valid_toy <- valid_code(c("A","B","C"))
+#' is_valid_toy(c("X","A","Z","B"))
 valid_code <- function(codeList){
-  funct<-function(code){
+  function(code){
     if (is.list(code)){
       # the user gave us a list of codes...
       x<-purrr::map(code,~.x %in% codeList)
@@ -9,25 +31,19 @@ valid_code <- function(codeList){
     }
     x
   }
-  funct
 }
 
-#' Is a code valid 6-digit soc 2010 code?
-#'
-#' @param code  a character vector of soc 2010 codes
-#'
-#' @return a boolean vector
+#' @rdname valid_code
 #' @export
 is_valid_6digit_soc2010 <- valid_code(socR::soc2010_6digit$soc_code)
 
-#' Is a code valid 4-digit noc 2011 code?
-#'
-#' checks to see if a noc 2011 4 digit code is valid
-#' @param code a character vector of noc 2011 codes
-#' @return a boolean vector
+#' @rdname valid_code
 #' @export
 is_valid_4digit_noc2011<- valid_code(socR::noc2011_4digit$noc_code)
 
+#' @rdname valid_code
+#' @export
+is_valid_soc1980<- valid_code(soc1980_all$soc1980_code)
 
 #' Standardize US SOC 1980 codes
 #'
@@ -56,13 +72,6 @@ standardize_soc1980_codes <- function(codes){
   dplyr::recode(codes,!!!code_map)
 }
 
-#' Is a code valid soc 1980 code?
-#'
-#' checks to see if a code is a valid standard soc1980 code
-#' @param code a character vector of soc1980 codes
-#' @return a boolean vector
-#' @export
-#'
-#' @seealso \code{\link{standardize_soc1980_codes}}
-is_valid_soc1980<- valid_code(soc1980_all$soc1980_code)
+
+
 
