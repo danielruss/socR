@@ -243,18 +243,20 @@ make_code_str <- function(x){
 #' @param x The crosswalk
 #' @description
 #' The more potential codes that a crosswalk will allow an intial code to become, the higher
-#' the entropy.  The entropy (H) is given by \deqn{H = \Sigma p log p} where p = 1/n and n is the number of potential codes
-#' a single code can map to, natural logs are used in the calculation.
+#' the entropy.  The entropy (S) is given by \deqn{S = -\Sigma \Sigma p log p} where p = 1/n and n is the number of potential codes.
+#' a single code can map to, natural logs are used in the calculation. The inner summation
+#' can be is the sum of n iteration of 1/n, so the equation can be simplified
+#' to \deqn{S = -\Sigma log p}
 #'
 #' @return the entropy
 #' @export
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
-xwalk_entropy <- function(x){
-  p<-0
+xwalk_entropy <- function(x) {
   x$data %>% dplyr::group_by(!!as.name(x$codes1)) %>%
-    dplyr::summarize(p=1/dplyr::n()) %>% dplyr::ungroup() %>%
-    dplyr::summarize(entropy=sum(-p*log(p))) %>% tibble::deframe()
+    dplyr::summarize(n=n()) %>%
+    summarise(entropy=sum(-log(1/n))) %>%
+    pull(entropy)
 }
 
 multi_hot_encoder<-function(all_codes){
