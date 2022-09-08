@@ -255,7 +255,7 @@ make_code_str <- function(x){
 xwalk_entropy <- function(x) {
   x$data %>% dplyr::group_by(!!as.name(x$codes1)) %>%
     dplyr::summarize(n=dplyr::n()) %>%
-    dplyr::summarise(entropy=sum(-log(1/.data$n))) %>%
+    dplyr::summarise(entropy=sum(log(.data$n))) %>%
     dplyr::pull(.data$entropy)
 }
 
