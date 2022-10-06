@@ -23,5 +23,5 @@ Imports:
     digest,
     readxl,
     DBI,
-    RSQLite,
-    dbplyr
+    RSQLite
+    
