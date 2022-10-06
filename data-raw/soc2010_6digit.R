@@ -10,4 +10,5 @@ getSoc1980Code <- function(division,major,minor,unit,title){
   x <- x[!is.na(x)]
   return(x[length(x)])
 }
-soc1980 <- read_csv("https://danielruss.github.io/codingsystems/soc1980.csv",col_types = "ccccc") %>% mutate(code=pmap_chr(.,getSoc1980Code))
+soc1980_all <- readr::read_csv("https://danielruss.github.io/codingsystems/soc1980.csv",col_types = "cccccccc")
+save(soc1980_all, file="data/soc1980_all.rdata")
