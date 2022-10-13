@@ -259,15 +259,3 @@ xwalk_entropy <- function(x) {
     dplyr::pull(.data$entropy)
 }
 
-multi_hot_encoder<-function(all_codes){
-  all_the_codes <- all_codes %>% unique %>% unname %>% tibble::enframe(name="index", value="code")
-
-  transform <- function(codes){
-    res <- logical(nrow(codes))
-    res <- all_the_codes %>% dplyr::filter(.data$code %in% codes) %>%
-      dplyr::pull(.data$index) %>%
-      purrr::reduce(function(old,indx){ old[indx]=1;return(old) }, .init=res)
-    res
-  }
-  list(transform=transform)
-}

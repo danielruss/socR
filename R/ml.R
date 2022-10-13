@@ -22,3 +22,25 @@ split_data <- function(x,pTrain=.90,pDev=0.09,pTest=0.01){
   p <- floor( 1000*c(pTrain,pDev,pTest)/(pTrain+pDev+pTest) )
   factor(dplyr::if_else(zz<p[1],"train",dplyr::if_else(zz<(p[1]+p[2]),"dev","test")),levels = c("train","dev","test"))
 }
+
+
+#' creates a multihot encoder from a list of labels
+#'
+#' @param allLabels The complete set of labels
+#'
+#' @return a function that preforms multihot encoding
+#' @export
+#'
+#' @examples
+#' soc2010_ohe <- createMultiHotEncoder(soc2010_6digit$soc_code)
+#' soc2010_ohe(c("11-1011","11-1021"))
+#' x = list(c("11-1011"),c("11-2011","11-3011"))
+#' x %>% map(soc2010_ohe)
+createMultiHotEncoder <- function (allLabels){
+  function(labels){
+    z <- integer(length = length(allLabels))
+    z[match(labels,allLabels)]<-1
+    z
+  }
+}
+
