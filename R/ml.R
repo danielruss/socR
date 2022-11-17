@@ -35,7 +35,7 @@ split_data <- function(x,pTrain=.90,pDev=0.09,pTest=0.01){
 #' soc2010_ohe <- createMultiHotEncoder(soc2010_6digit$soc_code)
 #' soc2010_ohe(c("11-1011","11-1021"))
 #' x = list(c("11-1011"),c("11-2011","11-3011"))
-#' x %>% map(soc2010_ohe)
+#' purrr::map(x,soc2010_ohe)
 createMultiHotEncoder <- function (allLabels){
   function(labels){
     z <- integer(length = length(allLabels))
