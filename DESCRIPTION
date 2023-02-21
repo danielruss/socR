@@ -1,7 +1,7 @@
 Package: socR
 Type: Package
 Title: Useful functions for working with occupation coding
-Version: 0.1.16
+Version: 0.1.17
 Authors@R: person("Daniel","Russ", email="druss@mail.nih.gov",role=c("aut","cre"),
                   comment = c(ORCID = "0000-0003-4040-4416"))
 Maintainer: Daniel Russ <druss@mail.nih.gov>
@@ -10,7 +10,7 @@ Description: A set of functions that I find useful in my research
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Imports:
     rlang,
     dplyr,

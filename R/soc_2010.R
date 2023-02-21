@@ -45,6 +45,18 @@ is_valid_4digit_noc2011<- valid_code(socR::noc2011_4digit$noc_code)
 #' @export
 is_valid_soc1980<- valid_code(soc1980_all$soc1980_code)
 
+#' @rdname valid_code
+#' @export
+is_most_detailed_soc1980<- valid_code(soc1980_detailed$soc_code)
+
+#' @rdname valid_code
+#' @export
+is_valid_extended_soc1980<- valid_code(soc1980_extended$soc1980_code)
+
+#' @rdname valid_code
+#' @export
+is_most_detailed_extended_soc1980<- valid_code(soc1980_extended$unit[!is.na(soc1980_extended$unit)])
+
 #' Standardize US SOC 1980 codes
 #'
 #' US SOC 1980 codes are often written in none stand form (e.g 4600 instead of 46-47).  This function
@@ -62,7 +74,10 @@ is_valid_soc1980<- valid_code(soc1980_all$soc1980_code)
 #' standardize_soc1980_codes(c("2000",'7600'))
 #'
 standardize_soc1980_codes <- function(codes){
-  codes <- stringr::str_remove_all(codes,"^0+|00?$")
+  ## convert 9XYY to 99 unless you have 91YY
+  codes <- stringr::str_replace(codes,"9[^1]\\d+","99")
+  ## convert XX00 to XX or XXX0 to XXX
+  codes <- stringr::str_replace(codes,"(\\d\\d)00?","\\1")
 
   code_map <-c(rep('12-13',2),rep('46-47',2),rep('73-74',2),rep('75-76',2),rep("162-3",2),rep("434-5",2),
                rep("525-6",2),rep("646-7",2),rep("681-2",2),rep("731-2",2),rep("746-7",2),rep('751-2',2),
@@ -74,4 +89,33 @@ standardize_soc1980_codes <- function(codes){
 
 
 
+#' Extended SOC 1980 codes
+#'
+#' Takes valid 1980 standardized codes (the ones in the book) and extends
+#' them so that unit codes are always the most detailed (even if it is exactly
+#' the same as the parent code.)
+#'
+#' @param codes The codes we are extending
+#'
+#' @return extended codes.
+#' @export
+#'
+extend_standard_soc1980_codes <- function(codes){
+  invalid_soc_codes=codes[ !is_valid_soc1980(codes) ]
+  if (length(invalid_soc_codes)>0 ) {
+    stop('all codes must be standardized soc codes: \ninvalid codes: ',invalid_soc_codes)
+  }
+  code_level = codes %>% purrr::map_chr(~socR::soc1980_extended %>% dplyr::filter(soc1980_code==.x) %>%
+                                          dplyr::pull(Level) )
+  xtd_codes = purrr::map2(codes,code_level,
+                   function(x,y){
+                     socR::soc1980_extended %>%
+                       dplyr::filter(!!rlang::sym(y)==x, !is.na(.data$unit)) %>%
+                       dplyr::pull(.data$unit) %>% as.character
+                   })
+  ncodes = purrr::map_int(xtd_codes,length)
+  xtd_code1 = purrr::map_chr(xtd_codes,dplyr::first)
+
+  dplyr::if_else(ncodes>1,codes,xtd_code1)
+}
 
