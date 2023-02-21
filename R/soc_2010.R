@@ -75,7 +75,7 @@ is_most_detailed_extended_soc1980<- valid_code(soc1980_extended$unit[!is.na(soc1
 #'
 standardize_soc1980_codes <- function(codes){
   ## convert 9XYY to 99 unless you have 91YY
-  codes <- stringr::str_replace(codes,"9[^1]\\d+","99")
+  codes <- stringr::str_replace(codes,"^9[^1]\\d+","99")
   ## convert XX00 to XX or XXX0 to XXX
   codes <- stringr::str_replace(codes,"(\\d\\d)00?","\\1")
 

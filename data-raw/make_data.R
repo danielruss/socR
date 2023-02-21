@@ -16,6 +16,6 @@ save(soc1980_all, file="data/soc1980_all.rdata")
 soc1980_detailed <- readr::read_csv("https://danielruss.github.io/codingsystems/soc1980_most_detailed.csv",col_types = "cccccc")
 save(soc1980_detailed, file="data/soc1980_detailed.rdata")
 
-soc1980_extended <- readr::read_csv("https://danielruss.github.io/codingsystems/soc_1980_extended.csv",col_types = "cccccc")
+soc1980_extended <- readr::read_csv("https://danielruss.github.io/codingsystems/soc_1980_extended.csv",col_types = "cccccccc")
 save(soc1980_extended, file="data/soc1980_extended.rdata")
 
