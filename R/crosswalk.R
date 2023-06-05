@@ -3,17 +3,15 @@
 #' takes a data frame (the crosswalk) and which columns are the codes and titles
 #' and create an xwalk object that can perform crosswalks...
 #' @param dta the data frame of the crosswalk, or the filename/URL of a csv crosswalk file or the filename of an excel file.
-#' @param codes1 Codes for the (Default) input coding system for crosswalking can be overridden if the xwalk is bidirectional
+#' @param codes1 Codes for the (Default) input coding system for crosswalking
 #' @param titles1 Titles for the (Default) input coding system.
-#' @param codes2 Codes for the (Default) output coding system for crosswalking can be overridden if the xwalk is bidirectional
+#' @param codes2 Codes for the (Default) output coding system for crosswalking
 #' @param titles2 Titles for the (Default) output coding system.
-#' @param bidirectional Can we use this crosswalk in both directions? if true, you can supply the column names in the crosswalk function
-#' to code in the reverse direction.
 #' @param col_types set the default col_type parameter for read_csv/read_excel
 #' @param ... additional parameters passed to read_csv
 #' @export
-xwalk <- function(dta,codes1,titles1,codes2,titles2,bidirectional=FALSE,col_types=ifelse(grepl("\\.xlsx?$",dta),"text","c"),...){
-  if (missing(dta)) stop("xwalk requires either the crosswalk (dta)")
+xwalk <- function(dta,codes1,titles1,codes2,titles2,col_types=ifelse(grepl("\\.xlsx?$",dta),"text","c"),...){
+  if (missing(dta)) stop("xwalk requires the crosswalk data or a path/URL to the data")
 
   if (typeof(dta)=="character"){
     dta <- switch(
@@ -34,7 +32,7 @@ xwalk <- function(dta,codes1,titles1,codes2,titles2,bidirectional=FALSE,col_type
   if ( use_colnames && ncol(dta)!=4 )
     stop("xwalk needs to know which columns are the codes and cannot figure it out, please provide additional arguments code1 and code2")
 
-  obj <- list(bidirectional=bidirectional)
+  obj <- list()
 
   if ( use_colnames ){
     obj$codes1 <-  colnames(dta)[1]
@@ -59,9 +57,16 @@ xwalk <- function(dta,codes1,titles1,codes2,titles2,bidirectional=FALSE,col_type
   }
 
   obj$data <- dta %>% dplyr::select(intersect(colnames(dta),c(obj$codes1,obj$titles1,obj$codes2,obj$titles2)))
+
+  xw_map <- dplyr::pull(obj$data,obj$codes2,obj$codes1)
+  obj$map <- purrr::reduce2(xw_map,names(xw_map),function(acc,value,name){acc[[name]]=c(acc[[name]],value); acc},.init=list() )
+  xw_map <- dplyr::pull(obj$data,obj$codes1,obj$codes2)
+  obj$inverse_map <- purrr::reduce2(xw_map,names(xw_map),function(acc,value,name){acc[[name]]=c(acc[[name]],value); acc},.init=list() )
+
   attr(obj, "class") <- "xwalk"
   obj
 }
+
 
 #' @export
 #' @importFrom utils head
@@ -133,20 +138,6 @@ combine_crosswalks<-function(xw1,xw2){
 #' @export
 is.xwalk <- function(x) inherits(x,"xwalk")
 
-#' checks if a crosswalk is bidirectional
-#'
-#' Is a crosswalk bidirectional?
-#'
-#'
-#' @usage
-#' bidirectional(x)
-#'
-#' @param x A crosswalk of class xwalk
-#' @export
-bidirectional <- function(x) {
-  if (!is.xwalk(x)) stop("x is not a crosswalk")
-  x$bidirectional
-}
 
 #' @export
 dim.xwalk <- function(x) dim(x$data)
@@ -181,46 +172,23 @@ codes <- function(x,code_column){
 #'
 #' @param codes the vector of codes that will be crosswalked
 #' @param xwalk the concordance table.
-#' @param from_column the column in the xwalk table for the codes of the starting coding system, if xwalk is of
-#' class xwalk, and is unidirectional then this parameter is not needed.  If the xwalk if bidirectional,
-#' then the parameter is optional. The default is xwalk$codes1.  If xwalk is not of class xwalk, then this parameter
-#' is required
-#' @param to_column to_column the column in the xwalk table for the codes of the results coding system, if xwalk is of
-#' class xwalk, and is unidirectional then this parameter is not needed.  If the xwalk if bidirectional,
-#' then the parameter is optional. The default is xwalk$codes2.  If xwalk is not of class xwalk, then this parameter
-#' is required
+#' @param invert by default the crosswalk goes from codes1 to
+#' codes2 setting invert to TRUE make the crosswalk go from codes2
+#' to codes1
 #'
 #' @return an unnamed list of codes in the resulting coding system
 #' @export
 #'
-crosswalk <- function(codes,xwalk,from_column,to_column){
-  if ( (is.data.frame(xwalk) && (missing(from_column)|| missing(to_column)) ) && !is.xwalk(xwalk) ) {
-    stop("crosswalk needs either a crosswalk object, or a dataframe along with the from and from columns")
+crosswalk <- function(codes,xwalk,from_column,to_column,invert=FALSE){
+  if (!is.xwalk(xwalk)){
+    stop("crosswalk needs either a crosswalk object")
   }
+  ## if you set invert to true, use the inverse map, otherwise
+  ## use the map
+  map_to_use = xwalk$map
+  if (invert) map_to_use = xwalk$inverse_map
 
-  xw_data = xwalk
-  if (socR::is.xwalk(xwalk)){
-    xw_data <- xwalk$data
-  }
-
-  if (missing(from_column)){
-    from_column_sym <- rlang::sym( xwalk$codes1 )
-    from_column_str <- xwalk$codes1
-    to_column_sym   <- rlang::sym( xwalk$codes2 )
-    to_column_str   <- xwalk$codes2
-  }else{
-    ## quote the parameters -- they are not variables ...
-    from_column_sym <- rlang::enquo(from_column)
-    from_column_str <- rlang::quo_name(from_column_sym)
-    to_column_sym <- rlang::enquo(to_column)
-    to_column_str <- rlang::quo_name(to_column_sym)
-  }
-
-  xw <- xw_data %>% dplyr::group_by({{from_column_sym}}) %>% dplyr::summarise({{to_column_sym}} :=list({{to_column_sym}}))
-  tibble::enframe(codes,name=NULL,value=from_column_str) %>%
-    dplyr::left_join(xw,by=from_column_str) %>%
-    dplyr::mutate({{to_column_sym}} := purrr::modify_if({{to_column_sym}},is.null,~character(0)))%>%
-    dplyr::pull({{to_column_sym}} )
+  map_to_use[codes]
 }
 
 #' convert a list column of codes to vector of string for display

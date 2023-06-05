@@ -5,22 +5,16 @@
 \title{Use the concordance table (crosswalk) to convert from one
 coding system to another.}
 \usage{
-crosswalk(codes, xwalk, from_column, to_column)
+crosswalk(codes, xwalk, from_column, to_column, invert = FALSE)
 }
 \arguments{
 \item{codes}{the vector of codes that will be crosswalked}
 
 \item{xwalk}{the concordance table.}
 
-\item{from_column}{the column in the xwalk table for the codes of the starting coding system, if xwalk is of
-class xwalk, and is unidirectional then this parameter is not needed.  If the xwalk if bidirectional,
-then the parameter is optional. The default is xwalk$codes1.  If xwalk is not of class xwalk, then this parameter
-is required}
-
-\item{to_column}{to_column the column in the xwalk table for the codes of the results coding system, if xwalk is of
-class xwalk, and is unidirectional then this parameter is not needed.  If the xwalk if bidirectional,
-then the parameter is optional. The default is xwalk$codes2.  If xwalk is not of class xwalk, then this parameter
-is required}
+\item{invert}{by default the crosswalk goes from codes1 to
+codes2 setting invert to TRUE make the crosswalk go from codes2
+to codes1}
 }
 \value{
 an unnamed list of codes in the resulting coding system

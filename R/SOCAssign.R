@@ -12,24 +12,21 @@
 load_socassign_db <- function(fname,addSrc=FALSE){
   message("loading ",fname)
   con <- DBI::dbConnect(RSQLite::SQLite(), fname)
-  a1 <- DBI::dbReadTable(con,"ASSIGNMENTS_TABLE") %>% tibble::as_tibble()
+  a1 <- DBI::dbReadTable(con,"ASSIGNMENTS_TABLE") %>% tibble::as_tibble() |> purrr::set_names("ROW","coder_1","coder_2","coder_3","FLAG","COMMENT")
   r1 <- DBI::dbReadTable(con,"RESULTS_TABLE") %>% tibble::as_tibble()
-  h1 <- DBI::dbReadTable(con,"HEAD_TABLE")
+  ## having problems with capitalization of the headers. SOC2010_n and SCORE_n
+  ## so convert them all to lower case...
+  h1 <- DBI::dbReadTable(con,"HEAD_TABLE") |> dplyr::mutate(value=gsub("^(SCORE|SOC)","\\L\\1",.data$value,perl = T))
   DBI::dbDisconnect(con)
   rm(con)
 
   h1 <- h1 %>% dplyr::mutate(column=.data$column-1)
-  x1 <- a1 %>% dplyr::select(.data$ROW,.data$CODE1:.data$CODE3) %>% tidyr::pivot_longer(.data$CODE1:.data$CODE3) %>%
-    dplyr::filter(nchar(.data$value)>0) %>%  dplyr::rename(Id=.data$ROW)
   x2 <- r1 %>% dplyr::left_join(h1,by="column") %>% purrr::set_names("row","column","value","title") %>%
-    dplyr::select(.data$row,.data$value,.data$title) %>%
+    dplyr::select("row","value","title") %>%
     tidyr::pivot_wider(values_from = .data$value,names_from = .data$title) %>%
-    dplyr::select(-.data$row) %>% dplyr::mutate(Id=as.integer(.data$Id)) %>%
-    tidyr::pivot_longer(.data$JobTitle:.data$Score_10)
-  x2 <-  dplyr::bind_rows(x1,x2)
+    dplyr::select(-.data$row) %>% dplyr::mutate(Id=as.integer(.data$Id))
 
-  x2 <- tidyr::pivot_wider(x2,names_from = .data$name,values_from = .data$value) %>%
-    dplyr::select(.data$Id, .data$JobTitle,.data$SIC,.data$JobTask,.data$CODE1:.data$CODE3)
+    x2 <- x2 |> dplyr::left_join(a1,by=c("Id"="ROW"))
   if (addSrc){
     x2 <-  dplyr::mutate(x2,src=basename(fname))
   }
