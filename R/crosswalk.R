@@ -159,9 +159,14 @@ print.xwalk <- function(x,...) {
 #' @export
 codes <- function(x,code_column){
   stopifnot(is.xwalk(x))
+  if (missing("code_column")){
+    message(paste0("columns: ",paste(x$codes1,x$codes2,sep= ", ")))
+    return(invisible())
+  }
+
   cc <- rlang::as_string(rlang::ensym(code_column))
   if (! cc %in% names(x$data)){
-    stop("\n\tcould not find column ",cc,"\n\tavailable columns: ",paste(names(x$data),collapse = ", ") )
+    stop("\n\tcould not find column ",cc,"\n\tavailable columns: ",paste(x$codes1,x$codes2,sep= ", ") )
   }
   x$data[[ cc ]]
 }
