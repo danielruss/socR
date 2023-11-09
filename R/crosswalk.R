@@ -184,7 +184,7 @@ codes <- function(x,code_column){
 #' @return an unnamed list of codes in the resulting coding system
 #' @export
 #'
-crosswalk <- function(codes,xwalk,from_column,to_column,invert=FALSE){
+crosswalk <- function(codes,xwalk,invert=FALSE){
   if (!is.xwalk(xwalk)){
     stop("crosswalk needs either a crosswalk object")
   }

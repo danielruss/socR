@@ -5,7 +5,7 @@
 \title{Use the concordance table (crosswalk) to convert from one
 coding system to another.}
 \usage{
-crosswalk(codes, xwalk, from_column, to_column, invert = FALSE)
+crosswalk(codes, xwalk, invert = FALSE)
 }
 \arguments{
 \item{codes}{the vector of codes that will be crosswalked}
