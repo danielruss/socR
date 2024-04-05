@@ -196,6 +196,51 @@ crosswalk <- function(codes,xwalk,invert=FALSE){
   map_to_use[codes]
 }
 
+#' Crosswalk multiple columns in a tibble/data frame
+#'
+#' @description
+#'
+#' If you have a data frame of data with multiple columns that need to be
+#' crosswalked, use this in a pipe.
+#'
+#' @param .data job data
+#' @param xwalk crosswalk going from code system 1 to coding system 2
+#' @param new_column_name the column name for the results if the results
+#'  are unnested, the results will be colname_1, colname_2 ... colname_n,
+#'  otherwise the results are a list column with name new_column_name.
+#' @param ... Columns that need to be crosswalked
+#' @param unnest_results default=TRUE, should the results be separated into
+#' individual columns or else as a single list column
+#'
+#' @return a crosswalked tibble.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' a <- tibble::tibble(id=c("job-1","job-2"),soc2010_1=c("11-1011","11-2011"),
+#'      soc2010_2=c("11-1021",NA))
+#' xw <- socR::xwalk("https://danielruss.github.io/codingsystems/soc2010_soc2018.csv")
+#' a |> crosswalk_columns(xw,soc2018_xw,soc2010_1,soc2010_2)
+#' a |> crosswalk_columns(xw,soc2018_xw,soc2010_1,soc2010_2,unnest_results=FALSE)
+#' }
+crosswalk_columns <- function(.data, xwalk, new_column_name, ... ,unnest_results=TRUE) {
+  # Defuse the dots and capture the column names
+  vars <- rlang::enquos(...)
+
+  ## the important bit here is across(c(!!!vars))
+  res <- .data |> dplyr::mutate({{new_column_name}} := purrr::pmap(dplyr::across(c(!!!vars)), \(...){
+    x=c(...)
+    x=x[!is.na(x)]
+    unname( unlist( crosswalk(x,xwalk) ))
+  }))
+
+  if (unnest_results){
+    res <- res |> tidyr::unnest_wider({{new_column_name}},names_sep = "_")
+  }
+  res
+}
+
+
 #' convert a list column of codes to vector of string for display
 #'
 #' @param x codes column
