@@ -43,7 +43,7 @@ is_valid_4digit_noc2011<- valid_code(socR::noc2011_4digit$noc_code)
 
 #' @rdname valid_code
 #' @export
-is_valid_soc1980<- valid_code(soc1980_all$soc1980_code)
+is_valid_soc1980<- valid_code(soc1980_all$code)
 
 #' @rdname valid_code
 #' @export
