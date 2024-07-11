@@ -7,7 +7,7 @@
 codingsystem(codes, titles, name = "")
 }
 \arguments{
-\item{codes}{vector of codes}
+\item{codes}{vector of codes or a}
 
 \item{titles}{vector of title}
 
@@ -22,4 +22,6 @@ constructor create a coding system S3 class
 \examples{
 
 codingsystem(soc2010_6digit$soc_code,soc2010_6digit$title,"US SOC 2010 6 digit")
+codingsystem(soc2010_6digit$soc_code,soc2010_6digit$title,"US SOC 2010 6 digit")
+codingsystem(soc2010_all,"US SOC 2010")
 }

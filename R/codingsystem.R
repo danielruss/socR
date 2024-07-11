@@ -1,6 +1,6 @@
 #' constructor create a coding system S3 class
 #'
-#' @param codes vector of codes
+#' @param codes vector of codes or a
 #' @param titles vector of title
 #' @param name coding system name
 #'
@@ -10,9 +10,15 @@
 #' @examples
 #'
 #' codingsystem(soc2010_6digit$soc_code,soc2010_6digit$title,"US SOC 2010 6 digit")
+#' codingsystem(soc2010_6digit$soc_code,soc2010_6digit$title,"US SOC 2010 6 digit")
+#' codingsystem(soc2010_all,"US SOC 2010")
 codingsystem <- function(codes,titles,name=""){
     obj=list()
-    obj$table <- tibble::tibble(code=codes,title=titles)
+    if (is.data.frame(codes) && all(c("code","title") %in% colnames(codes)) ){
+      obj$table <- codes
+    }else{
+      obj$table <- tibble::tibble(code=codes,title=titles)
+    }
     obj$name=name
     attr(obj, "class") <- "codingsystem"
     obj
