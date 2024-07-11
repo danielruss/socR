@@ -7,7 +7,7 @@
 codingsystem(codes, titles, name = "")
 }
 \arguments{
-\item{codes}{vector of codes or a}
+\item{codes}{vector of codes or a dataframe containing the columns "code" (with codes) and "title" (with titles)}
 
 \item{titles}{vector of title}
 

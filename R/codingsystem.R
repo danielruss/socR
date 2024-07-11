@@ -1,6 +1,6 @@
 #' constructor create a coding system S3 class
 #'
-#' @param codes vector of codes or a
+#' @param codes vector of codes or a dataframe containing the columns "code" (with codes) and "title" (with titles)
 #' @param titles vector of title
 #' @param name coding system name
 #'
