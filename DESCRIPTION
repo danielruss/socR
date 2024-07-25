@@ -1,7 +1,7 @@
 Package: socR
 Type: Package
 Title: Useful functions for working with occupation coding
-Version: 0.3.3
+Version: 0.4.0
 Authors@R: person("Daniel","Russ", email="druss@mail.nih.gov",role=c("aut","cre"),
                   comment = c(ORCID = "0000-0003-4040-4416"))
 Maintainer: Daniel Russ <druss@mail.nih.gov>
@@ -24,7 +24,8 @@ Imports:
     digest,
     readxl,
     DBI,
-    RSQLite
+    RSQLite,
+    rio
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

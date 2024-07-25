@@ -1,3 +1,16 @@
+#' Check if a value is a url by looking
+#' for the http(s)://
+#'.Works with vectors...
+#'
+#' @param x String to check
+#'
+#' @return logical vector TRUE if the x is a url False otherwise
+#' @export
+#'
+is_url <- function(x){
+  grepl("^(http|https)://", x)
+}
+
 #' constructor create a coding system S3 class
 #'
 #' @param codes vector of codes or a dataframe containing the columns "code" (with codes) and "title" (with titles)
@@ -14,6 +27,7 @@
 #' codingsystem(soc2010_all,"US SOC 2010")
 codingsystem <- function(codes,titles,name=""){
     obj=list()
+
     if (is.data.frame(codes) && all(c("code","title") %in% colnames(codes)) ){
       obj$table <- codes
     }else{
@@ -67,6 +81,18 @@ name <- function(system){
   system$name
 }
 
+#' Load a coding system from a url or a path
+#'
+#' @param url a url or a path to the coding system data
+#' @param name the name for the codingsystem
+#'
+#' @return a codingsystem with data from the usl
+#' @export
+#'
+load_codingsystem<-function(url,name){
+  tbl <- rio::import(url,setclass = "tbl")
+  codingsystem(tbl,name=name)
+}
 
 #' Look up code
 #'
