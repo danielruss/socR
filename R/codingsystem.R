@@ -90,6 +90,7 @@ load_codingsystem<-function(url,name){
 #' @export
 #'
 lookup_code<-function(x,system){
+  stopifnot(is.codingsystem(system))
   system$table$title[match(x,system$table$code)]
 }
 
