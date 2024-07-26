@@ -19,8 +19,3 @@ the codingsystem object
 \description{
 constructor create a coding system S3 class
 }
-\examples{
-
-codingsystem(soc2010_6digit$code,soc2010_6digit$title,"US SOC 2010 6 digit")
-codingsystem(soc2010_all,"US SOC 2010")
-}

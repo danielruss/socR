@@ -20,10 +20,6 @@ is_url <- function(x){
 #' @return the codingsystem object
 #' @export
 #'
-#' @examples
-#'
-#' codingsystem(soc2010_6digit$code,soc2010_6digit$title,"US SOC 2010 6 digit")
-#' codingsystem(soc2010_all,"US SOC 2010")
 codingsystem <- function(codes,titles,name=""){
     obj=list()
 
@@ -43,9 +39,7 @@ codingsystem <- function(codes,titles,name=""){
 #' Is this object a coding system
 #'
 #' @param x object to test
-#' @examples
-#' x <- codingsystem(soc2010_6digit,name="US SOC 2010 6 digit")
-#' is.codingsystem(x)
+#'
 #' @export
 is.codingsystem <- function(x) inherits(x,"codingsystem")
 
@@ -57,9 +51,6 @@ is.codingsystem <- function(x) inherits(x,"codingsystem")
 #' @return boolean vector corresponding to whether the codes are in the coding system
 #' @export
 #'
-#' @examples
-#' soc2010 <- codingsystem(soc2010_6digit$code,soc2010_6digit$title,"US SOC 2010 6 digit")
-#' is_valid( c("11-2031","Fred","11-3031"),soc2010 )
 is_valid <- function(code,system){
   if (!is.codingsystem(system)) stop("system is not a codingsystem")
   code %in% system$table$code
@@ -73,9 +64,6 @@ is_valid <- function(code,system){
 #' @return  the name of the coding system (may be blank)
 #' @export
 #'
-#' @examples
-#' soc2010 <- codingsystem(soc2010_6digit,name="US SOC 2010 6 digit")
-#' name(soc2010)
 name <- function(system){
   system$name
 }
@@ -101,26 +89,29 @@ load_codingsystem<-function(url,name){
 #' @return a vector of titles for the codes
 #' @export
 #'
-#' @examples
-#' soc2010 <- codingsystem(soc2010_6digit,name="US SOC 2010 6 digit")
-#' lookup_code( c("11-2031","Fred","11-3031") , soc2010)
 lookup_code<-function(x,system){
   system$table$title[match(x,system$table$code)]
 }
 
 #' Use Coding system with dplyr
 #'
-#' @param .codingsystem  the coding system
+#' @param .data  the coding system
+#' @param x  the coding system
 #' @param ...  parts of the coding system
+#' @param .by passed to dplyr::filter
+#' @param .preserve passed to dplyr::filter
+#' @param .rows passed to dplyer::as_tibble
+#' @param .name_repair passed to dplyer::as_tibble
+#' @param rownames passed to dplyer::as_tibble
 #'
 #' @return a tibble
 #' @importFrom dplyr select
 #' @rdname codingsystem_dplyr
 #' @export
 #'
-select.codingsystem <- function(.codingsystem,...){
-  data <- .codingsystem$table
-  # Apsply dplyr::select() to the data
+select.codingsystem <- function(.data,...){
+  data <- .data$table
+  # Apply dplyr::select() to the data
   # note: this does not return a coding system...
   dplyr::select(data, ...)
 }
@@ -128,31 +119,32 @@ select.codingsystem <- function(.codingsystem,...){
 #' @rdname codingsystem_dplyr
 #' @importFrom dplyr filter
 #' @export
-filter.codingsystem <- function(.codingsystem,...){
-  data <- .codingsystem$table
+filter.codingsystem <- function(.data,...,.by=NULL,.preserve=FALSE){
+  data <- .data$table
   # Apsply dplyr::select() to the data
   # note: this does not return a coding system...
-  dplyr::filter(data, ...)
+  dplyr::filter(data, ...,.by=.by,.preserve=.preserve)
 }
 
 #' @rdname codingsystem_dplyr
 #' @importFrom dplyr as_tibble
 #' @export
-as_tibble.codingsystem <- function(.codingsystem,...){
-  .codingsystem$table
+as_tibble.codingsystem <- function(x,...,.rows=NULL,.name_repair=NULL,rownames=NULL){
+  x$table
 }
 
 #' formats a codingsystem
 #'
-#' @param .codingsystem
+#' @param x - the codingsystem
+#' @param ... not currently used
 #'
 #' @return a formatted character vector
 #' @export
 #'
-format.codingsystem <- function(.codingsystem){
-  table_str <- capture.output(print(.codingsystem$table))
+format.codingsystem <- function(x,...){
+  table_str <- utils::capture.output(print(x$table))
   table_str <- paste( table_str[grepl("^[^#]",table_str)], collapse="\n" )
-  paste("Coding System: ", .codingsystem$name, "\n", table_str)
+  paste("Coding System: ", x$name, "\n", table_str)
 }
 
 #' Get a list of codes from a coding system
@@ -175,11 +167,12 @@ get_codes <-function(.codingsystem){
 
 #' prints a codingsystem
 #'
-#' @param .codingsystem
+#' @param x - the codingsystem
+#' @param ... parameter for format, not currently used
 #'
 #' @export
 #'
-print.codingsystem <- function(.codingsystem){
-  cat(format(.codingsystem), "\n")
-  invisible(.codingsystem)
+print.codingsystem <- function(x,...){
+  cat(format(x,...), "\n")
+  invisible(x)
 }

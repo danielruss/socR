@@ -4,10 +4,12 @@
 \alias{print.codingsystem}
 \title{prints a codingsystem}
 \usage{
-\method{print}{codingsystem}(.codingsystem)
+\method{print}{codingsystem}(x, ...)
 }
 \arguments{
-\item{.codingsystem}{}
+\item{x}{- the codingsystem}
+
+\item{...}{parameter for format, not currently used}
 }
 \description{
 prints a codingsystem

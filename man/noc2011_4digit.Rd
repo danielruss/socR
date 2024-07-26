@@ -5,10 +5,7 @@
 \alias{noc2011_4digit}
 \title{noc2011 4 digit classification system}
 \format{
-\describe{
-\item{noc_code}{a 4 digit code formated like '0011', be careful must be a string not an integer}
-\item{title}{a short definition of the code}
-}
+An object of class \code{codingsystem} of length 2.
 }
 \source{
 \url{https://danielruss.github.io/codingsystems/noc2011_all.csv}
@@ -20,5 +17,8 @@ noc2011_4digit
 }
 \description{
 Canadian 4 digit National Occupational Classification (NOC) 2011
+}
+\details{
+A codingsystem object with the noc2011 4-digit codes
 }
 \keyword{datasets}

@@ -6,16 +6,28 @@
 \alias{as_tibble.codingsystem}
 \title{Use Coding system with dplyr}
 \usage{
-\method{select}{codingsystem}(.codingsystem, ...)
+\method{select}{codingsystem}(.data, ...)
 
-\method{filter}{codingsystem}(.codingsystem, ...)
+\method{filter}{codingsystem}(.data, ..., .by = NULL, .preserve = FALSE)
 
-\method{as_tibble}{codingsystem}(.codingsystem, ...)
+\method{as_tibble}{codingsystem}(x, ..., .rows = NULL, .name_repair = NULL, rownames = NULL)
 }
 \arguments{
-\item{.codingsystem}{the coding system}
+\item{.data}{the coding system}
 
 \item{...}{parts of the coding system}
+
+\item{.by}{passed to dplyr::filter}
+
+\item{.preserve}{passed to dplyr::filter}
+
+\item{x}{the coding system}
+
+\item{.rows}{passed to dplyer::as_tibble}
+
+\item{.name_repair}{passed to dplyer::as_tibble}
+
+\item{rownames}{passed to dplyer::as_tibble}
 }
 \value{
 a tibble

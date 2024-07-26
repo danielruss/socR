@@ -5,9 +5,10 @@
 \alias{soc1980_all}
 \title{SOC 1980 complete classification system}
 \format{
+a coding system that consists of
 \describe{
-\item{soc1980_code}{the n-digit soc 1980}
-\item{title}{a short definition of the code}
+ \item{code}{The soc 1980 code}
+ \item{title}{The title of the code}
 }
 }
 \source{
@@ -18,5 +19,8 @@ soc1980_all
 }
 \description{
 US SOC 1980 classification system
+}
+\details{
+The complete US SOC 1980 system
 }
 \keyword{datasets}

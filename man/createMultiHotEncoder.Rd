@@ -15,9 +15,3 @@ a function that preforms multihot encoding
 \description{
 creates a multihot encoder from a list of labels
 }
-\examples{
-soc2010_ohe <- createMultiHotEncoder(soc2010_6digit$soc_code)
-soc2010_ohe(c("11-1011","11-1021"))
-x = list(c("11-1011"),c("11-2011","11-3011"))
-purrr::map(x,soc2010_ohe)
-}

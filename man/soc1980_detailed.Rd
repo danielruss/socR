@@ -5,16 +5,7 @@
 \alias{soc1980_detailed}
 \title{Detailed SOC 1980  classification system}
 \format{
-\describe{
-\item{soc1980_code}{the soc 1980 code}
-\item{title}{a short definition of the code}
-\item{Level}{the level of the soc 1980 code}
-\item{parent}{the parent of the soc 1980 code, note: at the division level, the parent is 0000}
-\item{division}{for any soc 1980 code, what is the division code}
-\item{major}{for any soc 1980 code, what is the major code.  Is NA for division codes.}
-\item{minor}{for any soc 1980 code, what is the minor code. Is NA for division and major codes.}
-\item{unit}{for any soc 1980 code, what is the unit code.  Is NA for non-unit codes. }
-}
+An object of class \code{codingsystem} of length 2.
 }
 \source{
 \url{https://danielruss.github.io/codingsystems/soc1980_most_detailed.csv}

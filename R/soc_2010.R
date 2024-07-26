@@ -9,10 +9,10 @@
 #' valid_code functional.
 #'
 #' @param codeList a vector of valid codes
-#' @param code a vector of codes to check against the vector of valid codes
 #'
 #' @return valid_code returns a function. The functions (e.g. is_valid_soc2010)
-#' return a logic vector representing if the codes are valid.
+#' take a code or a vector of codes and
+#' returns a logic vector representing if the codes are valid.
 #' @export
 #'
 #' @seealso [standardize_soc1980_codes()]
@@ -22,7 +22,9 @@
 #' is_valid_toy(c("X","A","Z","B"))
 valid_code <- function(codeList){
   if (is.codingsystem(codeList)) {
-    codeList=codeList$table$code
+    codeList <- codeList$table$code
+  } else if (is.data.frame(codeList) && "code" %in% names(codeList)){
+    codeList <- codeList$code
   }
 
   function(code){
@@ -37,29 +39,30 @@ valid_code <- function(codeList){
   }
 }
 
-#' @rdname valid_code
-#' @export
-is_valid_6digit_soc2010 <- valid_code(socR::soc2010_6digit$code)
+# #' @rdname valid_code
+# #' @export
+# is_valid_6digit_soc2010 <- valid_code(socR::soc2010_6digit)
 
-#' @rdname valid_code
-#' @export
-is_valid_4digit_noc2011<- valid_code(socR::noc2011_4digit$code)
+# #' @rdname valid_code
+# #' @export
+# is_valid_4digit_noc2011<- valid_code(socR::noc2011_4digit)
 
-#' @rdname valid_code
-#' @export
-is_valid_soc1980<- valid_code(socR::soc1980_all$code)
+# #' @rdname valid_code
+# #' @export
+# is_valid_soc1980<- valid_code(socR::soc1980_all)
 
-#' @rdname valid_code
-#' @export
-is_most_detailed_soc1980<- valid_code(socR::soc1980_detailed$code)
+# #' @rdname valid_code
+# #' @export
+# is_most_detailed_soc1980<- valid_code(socR::soc1980_detailed)
 
-#' @rdname valid_code
-#' @export
-is_valid_extended_soc1980<- valid_code(socR::soc1980_extended$soc1980_code)
+# #' @rdname valid_code
+# #' @export
+# is_valid_extended_soc1980<- valid_code(socR::soc1980_extended)
 
-#' @rdname valid_code
-#' @export
-is_most_detailed_extended_soc1980<- valid_code(socR::soc1980_extended$unit[!is.na(socR::soc1980_extended$unit)])
+# #' @rdname valid_code
+# #' @export
+# is_most_detailed_extended_soc1980<- valid_code(socR::soc1980_extended$unit[!is.na(socR::soc1980_extended$unit)])
+
 
 #' Standardize US SOC 1980 codes
 #'
@@ -93,33 +96,33 @@ standardize_soc1980_codes <- function(codes){
 
 
 
-#' Extended SOC 1980 codes
+#' #' Extended SOC 1980 codes
+#' #'
+#' #' Takes valid 1980 standardized codes (the ones in the book) and extends
+#' #' them so that unit codes are always the most detailed (even if it is exactly
+#' #' the same as the parent code.)
+#' #'
+#' #' @param codes The codes we are extending
+#' #'
+#' #' @return extended codes.
+#' #' @export
+#' #'
+#' extend_standard_soc1980_codes <- function(codes){
+#'   invalid_soc_codes=codes[ !is_valid_soc1980(codes) ]
+#'   if (length(invalid_soc_codes)>0 ) {
+#'     stop('all codes must be standardized soc codes: \ninvalid codes: ',invalid_soc_codes)
+#'   }
+#'   code_level = codes %>% purrr::map_chr(~socR::soc1980_extended %>% dplyr::filter(soc1980_code==.x) %>%
+#'                                           dplyr::pull(Level) )
+#'   xtd_codes = purrr::map2(codes,code_level,
+#'                    function(x,y){
+#'                      socR::soc1980_extended %>%
+#'                        dplyr::filter(!!rlang::sym(y)==x, !is.na(.data$unit)) %>%
+#'                        dplyr::pull(.data$unit) %>% as.character
+#'                    })
+#'   ncodes = purrr::map_int(xtd_codes,length)
+#'   xtd_code1 = purrr::map_chr(xtd_codes,dplyr::first)
 #'
-#' Takes valid 1980 standardized codes (the ones in the book) and extends
-#' them so that unit codes are always the most detailed (even if it is exactly
-#' the same as the parent code.)
-#'
-#' @param codes The codes we are extending
-#'
-#' @return extended codes.
-#' @export
-#'
-extend_standard_soc1980_codes <- function(codes){
-  invalid_soc_codes=codes[ !is_valid_soc1980(codes) ]
-  if (length(invalid_soc_codes)>0 ) {
-    stop('all codes must be standardized soc codes: \ninvalid codes: ',invalid_soc_codes)
-  }
-  code_level = codes %>% purrr::map_chr(~socR::soc1980_extended %>% dplyr::filter(soc1980_code==.x) %>%
-                                          dplyr::pull(Level) )
-  xtd_codes = purrr::map2(codes,code_level,
-                   function(x,y){
-                     socR::soc1980_extended %>%
-                       dplyr::filter(!!rlang::sym(y)==x, !is.na(.data$unit)) %>%
-                       dplyr::pull(.data$unit) %>% as.character
-                   })
-  ncodes = purrr::map_int(xtd_codes,length)
-  xtd_code1 = purrr::map_chr(xtd_codes,dplyr::first)
-
-  dplyr::if_else(ncodes>1,codes,xtd_code1)
-}
+#'   dplyr::if_else(ncodes>1,codes,xtd_code1)
+#' }
 

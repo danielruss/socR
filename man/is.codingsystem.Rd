@@ -12,7 +12,3 @@ is.codingsystem(x)
 \description{
 Is this object a coding system
 }
-\examples{
-x <- codingsystem(soc2010_6digit,name="US SOC 2010 6 digit")
-is.codingsystem(x)
-}

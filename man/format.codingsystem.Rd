@@ -4,10 +4,12 @@
 \alias{format.codingsystem}
 \title{formats a codingsystem}
 \usage{
-\method{format}{codingsystem}(.codingsystem)
+\method{format}{codingsystem}(x, ...)
 }
 \arguments{
-\item{.codingsystem}{}
+\item{x}{- the codingsystem}
+
+\item{...}{not currently used}
 }
 \value{
 a formatted character vector
