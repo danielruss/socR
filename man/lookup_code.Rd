@@ -18,6 +18,6 @@ a vector of titles for the codes
 Look up code
 }
 \examples{
-soc2010 <- codingsystem(soc2010_6digit$soc_code,soc2010_6digit$title,"US SOC 2010 6 digit")
+soc2010 <- codingsystem(soc2010_6digit,name="US SOC 2010 6 digit")
 lookup_code( c("11-2031","Fred","11-3031") , soc2010)
 }

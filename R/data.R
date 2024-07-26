@@ -4,11 +4,12 @@
 #'
 #' @format
 #' \describe{
-#' \item{soc_code}{a 6 digit code formated like '11-1011'}
+#' \item{code}{a 6 digit code formated like '11-1011'}
 #' \item{title}{a short definition of the code}
 #' }
 #'
-#' @source \url{https://danielruss.github.io/codingsystems/soc_2010_6digit.csv}
+#' The 6-digit soc2010 codes.
+#' @source \url{https://danielruss.github.io/codingsystems/soc2010_all.csv}
 #' @source \url{https://www.bls.gov/soc/2010/2010_major_groups.htm}
 "soc2010_6digit"
 
@@ -22,7 +23,7 @@
 #' \item{title}{a short definition of the code}
 #' }
 #'
-#' @source \url{https://danielruss.github.io/codingsystems/noc_2011_4d.csv}
+#' @source \url{https://danielruss.github.io/codingsystems/noc2011_all.csv}
 #' @source \url{https://www.statcan.gc.ca/eng/subjects/standard/noc/2011/index}
 "noc2011_4digit"
 
@@ -56,7 +57,7 @@
 #' \item{title}{a short definition of the code}
 #' }
 #'
-#' @source \url{https://danielruss.github.io/codingsystems/soc1980.csv}
+#' @source \url{https://danielruss.github.io/codingsystems/soc1980_all.csv}
 "soc1980_all"
 
 #' Extended SOC 1980 complete classification system

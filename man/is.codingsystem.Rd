@@ -13,6 +13,6 @@ is.codingsystem(x)
 Is this object a coding system
 }
 \examples{
-x <- codingsystem(soc2010_6digit$soc_code,soc2010_6digit$title,"US SOC 2010 6 digit")
+x <- codingsystem(soc2010_6digit,name="US SOC 2010 6 digit")
 is.codingsystem(x)
 }

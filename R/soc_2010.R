@@ -21,6 +21,10 @@
 #' is_valid_toy <- valid_code(c("A","B","C"))
 #' is_valid_toy(c("X","A","Z","B"))
 valid_code <- function(codeList){
+  if (is.codingsystem(codeList)) {
+    codeList=codeList$table$code
+  }
+
   function(code){
     if (is.list(code)){
       # the user gave us a list of codes...
@@ -35,27 +39,27 @@ valid_code <- function(codeList){
 
 #' @rdname valid_code
 #' @export
-is_valid_6digit_soc2010 <- valid_code(socR::soc2010_6digit$soc_code)
+is_valid_6digit_soc2010 <- valid_code(socR::soc2010_6digit$code)
 
 #' @rdname valid_code
 #' @export
-is_valid_4digit_noc2011<- valid_code(socR::noc2011_4digit$noc_code)
+is_valid_4digit_noc2011<- valid_code(socR::noc2011_4digit$code)
 
 #' @rdname valid_code
 #' @export
-is_valid_soc1980<- valid_code(soc1980_all$code)
+is_valid_soc1980<- valid_code(socR::soc1980_all$code)
 
 #' @rdname valid_code
 #' @export
-is_most_detailed_soc1980<- valid_code(soc1980_detailed$soc_code)
+is_most_detailed_soc1980<- valid_code(socR::soc1980_detailed$code)
 
 #' @rdname valid_code
 #' @export
-is_valid_extended_soc1980<- valid_code(soc1980_extended$soc1980_code)
+is_valid_extended_soc1980<- valid_code(socR::soc1980_extended$soc1980_code)
 
 #' @rdname valid_code
 #' @export
-is_most_detailed_extended_soc1980<- valid_code(soc1980_extended$unit[!is.na(soc1980_extended$unit)])
+is_most_detailed_extended_soc1980<- valid_code(socR::soc1980_extended$unit[!is.na(socR::soc1980_extended$unit)])
 
 #' Standardize US SOC 1980 codes
 #'

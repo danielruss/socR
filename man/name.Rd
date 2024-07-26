@@ -16,6 +16,6 @@ the name of the coding system (may be blank)
 Returns the user assigned name of the coding system
 }
 \examples{
-soc2010 <- codingsystem(soc2010_6digit$soc_code,soc2010_6digit$title,"US SOC 2010 6 digit")
+soc2010 <- codingsystem(soc2010_6digit,name="US SOC 2010 6 digit")
 name(soc2010)
 }

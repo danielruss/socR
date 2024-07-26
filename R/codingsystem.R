@@ -22,8 +22,7 @@ is_url <- function(x){
 #'
 #' @examples
 #'
-#' codingsystem(soc2010_6digit$soc_code,soc2010_6digit$title,"US SOC 2010 6 digit")
-#' codingsystem(soc2010_6digit$soc_code,soc2010_6digit$title,"US SOC 2010 6 digit")
+#' codingsystem(soc2010_6digit$code,soc2010_6digit$title,"US SOC 2010 6 digit")
 #' codingsystem(soc2010_all,"US SOC 2010")
 codingsystem <- function(codes,titles,name=""){
     obj=list()
@@ -45,7 +44,7 @@ codingsystem <- function(codes,titles,name=""){
 #'
 #' @param x object to test
 #' @examples
-#' x <- codingsystem(soc2010_6digit$soc_code,soc2010_6digit$title,"US SOC 2010 6 digit")
+#' x <- codingsystem(soc2010_6digit,name="US SOC 2010 6 digit")
 #' is.codingsystem(x)
 #' @export
 is.codingsystem <- function(x) inherits(x,"codingsystem")
@@ -59,7 +58,7 @@ is.codingsystem <- function(x) inherits(x,"codingsystem")
 #' @export
 #'
 #' @examples
-#' soc2010 <- codingsystem(soc2010_6digit$soc_code,soc2010_6digit$title,"US SOC 2010 6 digit")
+#' soc2010 <- codingsystem(soc2010_6digit$code,soc2010_6digit$title,"US SOC 2010 6 digit")
 #' is_valid( c("11-2031","Fred","11-3031"),soc2010 )
 is_valid <- function(code,system){
   if (!is.codingsystem(system)) stop("system is not a codingsystem")
@@ -75,7 +74,7 @@ is_valid <- function(code,system){
 #' @export
 #'
 #' @examples
-#' soc2010 <- codingsystem(soc2010_6digit$soc_code,soc2010_6digit$title,"US SOC 2010 6 digit")
+#' soc2010 <- codingsystem(soc2010_6digit,name="US SOC 2010 6 digit")
 #' name(soc2010)
 name <- function(system){
   system$name
@@ -103,8 +102,84 @@ load_codingsystem<-function(url,name){
 #' @export
 #'
 #' @examples
-#' soc2010 <- codingsystem(soc2010_6digit$soc_code,soc2010_6digit$title,"US SOC 2010 6 digit")
+#' soc2010 <- codingsystem(soc2010_6digit,name="US SOC 2010 6 digit")
 #' lookup_code( c("11-2031","Fred","11-3031") , soc2010)
 lookup_code<-function(x,system){
   system$table$title[match(x,system$table$code)]
+}
+
+#' Use Coding system with dplyr
+#'
+#' @param .codingsystem  the coding system
+#' @param ...  parts of the coding system
+#'
+#' @return a tibble
+#' @importFrom dplyr select
+#' @rdname codingsystem_dplyr
+#' @export
+#'
+select.codingsystem <- function(.codingsystem,...){
+  data <- .codingsystem$table
+  # Apsply dplyr::select() to the data
+  # note: this does not return a coding system...
+  dplyr::select(data, ...)
+}
+
+#' @rdname codingsystem_dplyr
+#' @importFrom dplyr filter
+#' @export
+filter.codingsystem <- function(.codingsystem,...){
+  data <- .codingsystem$table
+  # Apsply dplyr::select() to the data
+  # note: this does not return a coding system...
+  dplyr::filter(data, ...)
+}
+
+#' @rdname codingsystem_dplyr
+#' @importFrom dplyr as_tibble
+#' @export
+as_tibble.codingsystem <- function(.codingsystem,...){
+  .codingsystem$table
+}
+
+#' formats a codingsystem
+#'
+#' @param .codingsystem
+#'
+#' @return a formatted character vector
+#' @export
+#'
+format.codingsystem <- function(.codingsystem){
+  table_str <- capture.output(print(.codingsystem$table))
+  table_str <- paste( table_str[grepl("^[^#]",table_str)], collapse="\n" )
+  paste("Coding System: ", .codingsystem$name, "\n", table_str)
+}
+
+#' Get a list of codes from a coding system
+#'
+#' @param .codingsystem either a codingsystem or a tibble that has a a column
+#' named "code".
+#'
+#' @return a vector of codes
+#' @export
+#'
+get_codes <-function(.codingsystem){
+  x <- c()
+  if (is.codingsystem(.codingsystem)){
+    x<-.codingsystem$table$code
+  } else if(is.data.frame(.codingsystem) && "code" %in% colnames(.codingsystem)){
+    x<-.codingsystem$code
+  }
+  unique(x)
+}
+
+#' prints a codingsystem
+#'
+#' @param .codingsystem
+#'
+#' @export
+#'
+print.codingsystem <- function(.codingsystem){
+  cat(format(.codingsystem), "\n")
+  invisible(.codingsystem)
 }

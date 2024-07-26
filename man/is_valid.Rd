@@ -18,6 +18,6 @@ boolean vector corresponding to whether the codes are in the coding system
 Check if a set of codes are valid for a coding system
 }
 \examples{
-soc2010 <- codingsystem(soc2010_6digit$soc_code,soc2010_6digit$title,"US SOC 2010 6 digit")
+soc2010 <- codingsystem(soc2010_6digit$code,soc2010_6digit$title,"US SOC 2010 6 digit")
 is_valid( c("11-2031","Fred","11-3031"),soc2010 )
 }
