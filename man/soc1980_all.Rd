@@ -5,22 +5,18 @@
 \alias{soc1980_all}
 \title{SOC 1980 complete classification system}
 \format{
-a coding system that consists of
 \describe{
- \item{code}{The soc 1980 code}
- \item{title}{The title of the code}
+\item{soc1980_code}{the n-digit soc 1980}
+\item{title}{a short definition of the code}
 }
 }
 \source{
-\url{https://danielruss.github.io/codingsystems/soc1980_all.csv}
+\url{https://danielruss.github.io/codingsystems/soc1980.csv}
 }
 \usage{
 soc1980_all
 }
 \description{
 US SOC 1980 classification system
-}
-\details{
-The complete US SOC 1980 system
 }
 \keyword{datasets}

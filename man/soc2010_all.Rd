@@ -5,7 +5,17 @@
 \alias{soc2010_all}
 \title{Complete SOC 2010  classification system}
 \format{
-An object of class \code{spec_tbl_df} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 1425 rows and 9 columns.
+\describe{
+\item{code}{the soc 2010 code}
+\item{title}{a short definition of the code}
+\item{Level}{The number of significant digits in the code}
+\item{Hierarchical_structure}{The name of the level}
+\item{parent}{the parent of the soc code, note: 2 digit soc code dont have parents}
+\item{soc2d}{for any soc code, what is the 2-digit code}
+\item{soc3d}{for any soc code, what is the 3-digit code. Is NA for 2-digit codes.}
+\item{soc5d}{for any soc code, what is the 5-digit code. Is NA for 2- and 3-digit codes.}
+\item{soc6d}{for any soc code, what is the 6-digit code. Is NA for 2-, 3-, and 5-digit codes. }
+}
 }
 \source{
 \url{https://danielruss.github.io/codingsystems/soc2010_all.csv}

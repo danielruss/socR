@@ -5,14 +5,13 @@
 \alias{soc2010_6digit}
 \title{soc2010 6 digit classification system}
 \format{
-a coding system object
 \describe{
-  \item{code}{the 6-digit soc2010 code}
-  \item{title}{the title of the 6-digit soc2010 code}
+\item{code}{a 6 digit code formated like '11-1011'}
+\item{title}{a short definition of the code}
 }
 }
 \source{
-\url{https://danielruss.github.io/codingsystems/soc2010_all.csv}
+\url{https://danielruss.github.io/codingsystems/soc_2010_6digit.csv}
 
 \url{https://www.bls.gov/soc/2010/2010_major_groups.htm}
 }
@@ -21,10 +20,5 @@ soc2010_6digit
 }
 \description{
 Downloaded by Daniel Russ
-}
-\details{
-A codingsystem object with the soc2010 6-digit codes
-
-The 6-digit soc2010 codes.
 }
 \keyword{datasets}

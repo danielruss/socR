@@ -2,12 +2,29 @@
 % Please edit documentation in R/soc_2010.R
 \name{valid_code}
 \alias{valid_code}
+\alias{is_valid_6digit_soc2010}
+\alias{is_valid_soc1980}
+\alias{is_most_detailed_soc1980}
+\alias{is_valid_extended_soc1980}
+\alias{is_most_detailed_extended_soc1980}
 \title{Is valid code}
 \usage{
 valid_code(codeList)
+
+is_valid_6digit_soc2010(code)
+
+is_valid_soc1980(code)
+
+is_most_detailed_soc1980(code)
+
+is_valid_extended_soc1980(code)
+
+is_most_detailed_extended_soc1980(code)
 }
 \arguments{
 \item{codeList}{a vector of valid codes}
+
+\item{code}{codes to compare}
 }
 \value{
 valid_code returns a function. The functions (e.g. is_valid_soc2010)
