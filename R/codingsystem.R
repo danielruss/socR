@@ -23,6 +23,10 @@ is_url <- function(x){
 codingsystem <- function(codes,titles,name=""){
     obj=list()
 
+    if ( length(codes)==1 && is_url(codes)){
+      codes = readr::read_csv(codes,show_col_types = FALSE)
+    }
+
     if (is.data.frame(codes) && all(c("code","title") %in% colnames(codes)) ){
       obj$table <- codes
     }else{
@@ -143,9 +147,10 @@ as_tibble.codingsystem <- function(x,...,.rows=NULL,.name_repair=NULL,rownames=N
 #' @export
 #'
 format.codingsystem <- function(x,...){
-  table_str <- utils::capture.output(print(x$table))
+  grey58 = crayon::make_style(rgb(.58,.58,.58))
+  table_str <- format(x$table,...)[-1]
   table_str <- paste( table_str[grepl("^[^#]",table_str)], collapse="\n" )
-  paste("Coding System: ", x$name, "\n", table_str)
+  paste(grey58("# \U2139 Coding System: ", x$name), "\n", table_str)
 }
 
 #' Get a list of codes from a coding system
