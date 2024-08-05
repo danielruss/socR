@@ -144,8 +144,15 @@ dim.xwalk <- function(x) dim(x$data)
 
 #' @export
 print.xwalk <- function(x,...) {
-  #  print(c("codes1: ",x$codes1," titles1: ",x$titles1,"==>","codes2: ",x$codes2," titles2: ",x$titles2))
-  print(x$data,...)
+  cat(format(x,...), "\n")
+  invisible(x)
+}
+
+#' @export
+format.xwalk <- function(x,...){
+  table_str <- format(x$data,...)[-1]
+  table_str <- paste( table_str[grepl("^[^#]",table_str)], collapse="\n" )
+  paste(pillar::style_subtle(paste0("# Crosswalk: ", x$codes1, " <==> ",x$codes2)), "\n", table_str)
 }
 
 #' get the codes for a crosswalk,
