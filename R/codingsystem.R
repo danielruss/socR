@@ -147,10 +147,9 @@ as_tibble.codingsystem <- function(x,...,.rows=NULL,.name_repair=NULL,rownames=N
 #' @export
 #'
 format.codingsystem <- function(x,...){
-  grey58 = crayon::make_style(rgb(.58,.58,.58))
   table_str <- format(x$table,...)[-1]
   table_str <- paste( table_str[grepl("^[^#]",table_str)], collapse="\n" )
-  paste(grey58("# \U2139 Coding System: ", x$name), "\n", table_str)
+  paste(pillar::style_subtle(paste0("# Coding System: ", x$name)), "\n", table_str)
 }
 
 #' Get a list of codes from a coding system
