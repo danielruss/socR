@@ -3,11 +3,14 @@
 \name{as_codingsystem}
 \alias{as_codingsystem}
 \alias{as_codingsystem.data.frame}
+\alias{as_codingsystem.codingsystem}
 \title{Create a coding system from a data frame}
 \usage{
 as_codingsystem(x, name = "", ...)
 
 \method{as_codingsystem}{data.frame}(x, name = "", ...)
+
+\method{as_codingsystem}{codingsystem}(x, name = "", ...)
 }
 \arguments{
 \item{x}{the data frame containing columns "code" and "title"}

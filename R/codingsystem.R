@@ -214,3 +214,48 @@ as_codingsystem.data.frame <- function(x,name="",...){
   codingsystem(x,name=name)
 }
 
+#' @rdname as_codingsystem
+#' @export
+as_codingsystem.codingsystem <- function(x,name="",...){
+  x
+}
+
+#' to_level
+#'
+#' @description
+#' A utility function for converting occupational codes to higher levels
+#' in the hierarchy.
+#'
+#' @param codingsystem The coding system we are using
+#' @param level The level in the coding system we want.  Should be a column name
+#'  in the codingsystem table.
+#'
+#' @return a function that converts a vector of codes from a lower level
+#'  to a the level input.
+#' @export
+#'
+#' @examples
+#' to_soc2010_2d <- to_level(soc2010_all, soc2d)
+#' to_soc2010_2d(c("11-1011","15-1110"))
+#'
+to_level <- function(codingsystem, level) {
+  if (is.data.frame(codingsystem)){
+    codingsystem <- as_codingsystem(codingsystem)
+  }
+  col = rlang::enquo(level)
+  col_name = rlang::quo_name(col)
+
+  if (!is.codingsystem(codingsystem)){
+    stop("Please provide a codingsystem object or a data frame containing columns 'code' and 'title' and  '",col_name,"'")
+  }
+
+  if (!rlang::has_name(codingsystem$table, col_name)) {
+    message(col_name, " is not a level in ", codingsystem$name)
+    return( invisible() )
+  }
+
+  function(codes) {
+    map_vec = dplyr::pull(codingsystem$table, {{col}}, name = code)
+    return(unname(map_vec[codes]))
+  }
+}
