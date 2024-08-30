@@ -44,14 +44,6 @@ valid_code <- function(codeList){
 data("soc1980_all","soc2018_all","noc2011_all","soc2010_all",
      "noc2011_4digit","soc1980_detailed","soc1980_extended",
      "soc2010_6digit",envir=environment())
-soc1980_all<-codingsystem(soc1980_all,name="soc1980")
-soc2010_all<-codingsystem(soc2010_all,name="soc2010")
-soc2018_all<-codingsystem(soc2018_all,name="soc2018")
-noc2011_all<-codingsystem(noc2011_all,name="noc2011")
-soc1980_detailed<-codingsystem(soc1980_detailed,name="SOC 1980 most detailed codes")
-soc1980_extended<-codingsystem(soc1980_extended,name="SOC 1980 extended codes")
-soc2010_6digit<-codingsystem(soc2010_6digit,name="SOC 2010 6-digit level")
-
 
 #' @rdname valid_code
 #' @export

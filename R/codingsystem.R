@@ -16,15 +16,16 @@ is_url <- function(x){
 #' @param codes vector of codes or a dataframe containing the columns "code" (with codes) and "title" (with titles)
 #' @param titles vector of title
 #' @param name coding system name
+#' @param ... additional parameters passed into read_csv
 #'
 #' @return the codingsystem object
 #' @export
 #'
-codingsystem <- function(codes,titles,name=""){
+codingsystem <- function(codes,titles,...,name=""){
     obj=list()
 
     if ( length(codes)==1 && is_url(codes)){
-      codes = readr::read_csv(codes,show_col_types = FALSE)
+      codes = readr::read_csv(codes,...,show_col_types = FALSE)
     }
 
     if (is.data.frame(codes) && all(c("code","title") %in% colnames(codes)) ){
@@ -152,6 +153,18 @@ format.codingsystem <- function(x,...){
   paste(pillar::style_subtle(paste0("# Coding System: ", x$name)), "\n", table_str)
 }
 
+#' @inherit utils::head
+#' @export
+head.codingsystem <- function(x,...){
+  as_codingsystem(head(x$table,...),name=x$name)
+}
+
+#' @inherit utils::tail
+#' @export
+tail.codingsystem <- function(x,...){
+  as_codingsystem(tail(x$table,...),name=x$name)
+}
+
 #' Get a list of codes from a coding system
 #'
 #' @param .codingsystem either a codingsystem or a tibble that has a a column
@@ -181,3 +194,23 @@ print.codingsystem <- function(x,...){
   cat(format(x,...), "\n")
   invisible(x)
 }
+
+#' Create a coding system from a data frame
+#'
+#' @param x the data frame containing columns "code" and "title"
+#' @param name coding system name
+#' @param ... additional parameters
+#'
+#' @return a codingsystem object.
+#' @export
+#'
+as_codingsystem <- function(x, name="", ...) {
+  UseMethod("as_codingsystem")
+}
+
+#' @rdname as_codingsystem
+#' @export
+as_codingsystem.data.frame <- function(x,name="",...){
+  codingsystem(x,name=name)
+}
+
