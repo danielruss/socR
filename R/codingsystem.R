@@ -13,7 +13,10 @@ is_url <- function(x){
 
 #' constructor create a coding system S3 class
 #'
-#' @param codes vector of codes or a dataframe containing the columns "code" (with codes) and "title" (with titles)
+#' @param codes vector of codes, a dataframe containing the columns "code"
+#' (with codes) and "title" (with titles), or a url/file path of a csv file
+#' containing the codes and titles with header row containing at least "code"
+#' and title.  Other columns may be present.
 #' @param titles vector of title
 #' @param name coding system name
 #' @param ... additional parameters passed into read_csv
@@ -24,10 +27,11 @@ is_url <- function(x){
 codingsystem <- function(codes,titles,...,name=""){
     obj=list()
 
-    if ( length(codes)==1 && is_url(codes)){
-      codes = readr::read_csv(codes,...,show_col_types = FALSE)
+    if ( length(codes)==1 && (is_url(codes) || file.exists(codes)) ){
+      codes <- rio::import(codes,setclass="tbl")
     }
-
+    print( colnames(codes))
+    print( all(c("code","title") %in% colnames(codes)) )
     if (is.data.frame(codes) && all(c("code","title") %in% colnames(codes)) ){
       obj$table <- codes
     }else{
@@ -71,19 +75,6 @@ is_valid <- function(code,system){
 #'
 name <- function(system){
   system$name
-}
-
-#' Load a coding system from a url or a path
-#'
-#' @param url a url or a path to the coding system data
-#' @param name the name for the codingsystem
-#'
-#' @return a codingsystem with data from the usl
-#' @export
-#'
-load_codingsystem<-function(url,name){
-  tbl <- rio::import(url,setclass = "tbl")
-  codingsystem(tbl,name=name)
 }
 
 #' Look up code

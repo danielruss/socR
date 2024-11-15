@@ -7,7 +7,10 @@
 codingsystem(codes, titles, ..., name = "")
 }
 \arguments{
-\item{codes}{vector of codes or a dataframe containing the columns "code" (with codes) and "title" (with titles)}
+\item{codes}{vector of codes, a dataframe containing the columns "code"
+(with codes) and "title" (with titles), or a url/file path of a csv file
+containing the codes and titles with header row containing at least "code"
+and title.  Other columns may be present.}
 
 \item{titles}{vector of title}
 
