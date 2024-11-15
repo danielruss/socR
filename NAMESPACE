@@ -3,6 +3,7 @@
 S3method(as_codingsystem,codingsystem)
 S3method(as_codingsystem,data.frame)
 S3method(as_tibble,codingsystem)
+S3method(dim,codingsystem)
 S3method(dim,xwalk)
 S3method(filter,codingsystem)
 S3method(format,codingsystem)

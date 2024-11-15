@@ -159,6 +159,12 @@ tail.codingsystem <- function(x,...){
   as_codingsystem(tail(x$table,...),name=x$name)
 }
 
+#' @inherit base::dim
+#' @export
+dim.codingsystem <- function(x){
+  dim(x$table)
+}
+
 #' Get a list of codes from a coding system
 #'
 #' @param .codingsystem either a codingsystem or a tibble that has a a column
