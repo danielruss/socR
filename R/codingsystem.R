@@ -30,8 +30,6 @@ codingsystem <- function(codes,titles,...,name=""){
     if ( length(codes)==1 && (is_url(codes) || file.exists(codes)) ){
       codes <- rio::import(codes,setclass="tbl")
     }
-    print( colnames(codes))
-    print( all(c("code","title") %in% colnames(codes)) )
     if (is.data.frame(codes) && all(c("code","title") %in% colnames(codes)) ){
       obj$table <- codes
     }else{
@@ -92,6 +90,12 @@ lookup_code<-function(x,system){
 
 #' Use Coding system with dplyr
 #'
+#' @description
+#' These methods allow you to use the codingsystem like a tibble.
+#' When using select, make sure you keep the code/title or else you
+#' can break the functionality of the codingsystem.
+#'
+#'
 #' @param .data  the coding system
 #' @param x  the coding system
 #' @param ...  parts of the coding system
@@ -101,26 +105,25 @@ lookup_code<-function(x,system){
 #' @param .name_repair passed to dplyer::as_tibble
 #' @param rownames passed to dplyer::as_tibble
 #'
-#' @return a tibble
+#'
+#' @return a new codingsystem
 #' @importFrom dplyr select
 #' @rdname codingsystem_dplyr
 #' @export
 #'
 select.codingsystem <- function(.data,...){
   data <- .data$table
-  # Apply dplyr::select() to the data
-  # note: this does not return a coding system...
-  dplyr::select(data, ...)
+  as_codingsystem(dplyr::select(data, ...),name=.data$name)
 }
 
 #' @rdname codingsystem_dplyr
+#' @param name name for the filtered coding system
 #' @importFrom dplyr filter
 #' @export
-filter.codingsystem <- function(.data,...,.by=NULL,.preserve=FALSE){
+filter.codingsystem <- function (.data, ..., name=NULL, .by = NULL, .preserve = FALSE) {
   data <- .data$table
-  # Apsply dplyr::select() to the data
-  # note: this does not return a coding system...
-  dplyr::filter(data, ...,.by=.by,.preserve=.preserve)
+  name <- ifelse(is.null(name),trimws(paste0("filtered ",.data$name)),name)
+  dplyr::filter(data, ..., .by = .by, .preserve = .preserve) |> as_codingsystem(name)
 }
 
 #' @rdname codingsystem_dplyr

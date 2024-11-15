@@ -8,7 +8,7 @@
 \usage{
 \method{select}{codingsystem}(.data, ...)
 
-\method{filter}{codingsystem}(.data, ..., .by = NULL, .preserve = FALSE)
+\method{filter}{codingsystem}(.data, ..., name = NULL, .by = NULL, .preserve = FALSE)
 
 \method{as_tibble}{codingsystem}(x, ..., .rows = NULL, .name_repair = NULL, rownames = NULL)
 }
@@ -16,6 +16,8 @@
 \item{.data}{the coding system}
 
 \item{...}{parts of the coding system}
+
+\item{name}{name for the filtered coding system}
 
 \item{.by}{passed to dplyr::filter}
 
@@ -30,8 +32,10 @@
 \item{rownames}{passed to dplyer::as_tibble}
 }
 \value{
-a tibble
+a new codingsystem
 }
 \description{
-Use Coding system with dplyr
+These methods allow you to use the codingsystem like a tibble.
+When using select, make sure you keep the code/title or else you
+can break the functionality of the codingsystem.
 }
