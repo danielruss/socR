@@ -127,6 +127,17 @@ filter.codingsystem <- function (.data, ..., name=NULL, .by = NULL, .preserve = 
 }
 
 #' @rdname codingsystem_dplyr
+#' @param name name for the filtered coding system
+#' @importFrom dplyr mutate
+#' @export
+mutate.codingsystem <- function (.data, ...) {
+  data <- .data$table
+  print(head(data))
+  dplyr::mutate(data, ...) |> as_codingsystem(.data$name)
+}
+
+
+#' @rdname codingsystem_dplyr
 #' @importFrom dplyr as_tibble
 #' @export
 as_tibble.codingsystem <- function(x,...,.rows=NULL,.name_repair=NULL,rownames=NULL){

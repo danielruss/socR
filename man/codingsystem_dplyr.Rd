@@ -3,12 +3,15 @@
 \name{select.codingsystem}
 \alias{select.codingsystem}
 \alias{filter.codingsystem}
+\alias{mutate.codingsystem}
 \alias{as_tibble.codingsystem}
 \title{Use Coding system with dplyr}
 \usage{
 \method{select}{codingsystem}(.data, ...)
 
 \method{filter}{codingsystem}(.data, ..., name = NULL, .by = NULL, .preserve = FALSE)
+
+\method{mutate}{codingsystem}(.data, ...)
 
 \method{as_tibble}{codingsystem}(x, ..., .rows = NULL, .name_repair = NULL, rownames = NULL)
 }
