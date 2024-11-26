@@ -1,7 +1,7 @@
 Package: socR
 Type: Package
 Title: Useful functions for working with occupation coding
-Version: 0.5.6
+Version: 0.5.7
 Authors@R: person("Daniel","Russ", email="druss@mail.nih.gov",role=c("aut","cre"),
                   comment = c(ORCID = "0000-0003-4040-4416"))
 Maintainer: Daniel Russ <druss@mail.nih.gov>
@@ -28,7 +28,10 @@ Imports:
     rio,
     pillar
 Suggests: 
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Depends: 
     R (>= 2.10)
+VignetteBuilder: knitr
