@@ -25,6 +25,9 @@ the codingsystem object
 constructor create a coding system S3 class
 }
 \examples{
-naic2022 <- codingsystem("https://danielruss.github.io/codingsystems/naics2022_all.csv",name = "naics2022",colClasses=c(rep("character",2),"integer",rep("character",5)))
+
+url <- "https://danielruss.github.io/codingsystems/naics2022_all.csv"
+naic2022 <- codingsystem(url,name = "naics2022",
+   colClasses=c(rep("character",2),"integer",rep("character",5)))
 
 }
