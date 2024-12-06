@@ -19,16 +19,20 @@ is_url <- function(x){
 #' and title.  Other columns may be present.
 #' @param titles vector of title
 #' @param name coding system name
-#' @param ... additional parameters passed into read_csv
+#' @param ... additional parameters passed into rio::import
 #'
 #' @return the codingsystem object
+#'
+#' @examples
+#' naic2022 <- codingsystem("https://danielruss.github.io/codingsystems/naics2022_all.csv",name = "naics2022",colClasses=c(rep("character",2),"integer",rep("character",5)))
+#'
 #' @export
 #'
 codingsystem <- function(codes,titles,...,name=""){
     obj=list()
 
     if ( length(codes)==1 && (is_url(codes) || file.exists(codes)) ){
-      codes <- rio::import(codes,setclass="tbl")
+      codes <- rio::import(codes,setclass="tbl",...)
     }
     if (is.data.frame(codes) && all(c("code","title") %in% colnames(codes)) ){
       obj$table <- codes

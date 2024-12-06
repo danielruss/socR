@@ -14,7 +14,7 @@ and title.  Other columns may be present.}
 
 \item{titles}{vector of title}
 
-\item{...}{additional parameters passed into read_csv}
+\item{...}{additional parameters passed into rio::import}
 
 \item{name}{coding system name}
 }
@@ -23,4 +23,8 @@ the codingsystem object
 }
 \description{
 constructor create a coding system S3 class
+}
+\examples{
+naic2022 <- codingsystem("https://danielruss.github.io/codingsystems/naics2022_all.csv",name = "naics2022",colClasses=c(rep("character",2),"integer",rep("character",5)))
+
 }
