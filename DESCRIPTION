@@ -1,7 +1,7 @@
 Package: socR
 Type: Package
 Title: Useful functions for working with occupation coding
-Version: 0.5.7
+Version: 0.5.8
 Authors@R: person(c("Daniel","E."),"Russ", email="druss@mail.nih.gov",role=c("aut","cre"),
                   comment = c(ORCID = "0000-0003-4040-4416"))
 Maintainer: Daniel E. Russ <druss@mail.nih.gov>
