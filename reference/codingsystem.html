@@ -60,7 +60,7 @@ and title.  Other columns may be present.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>additional parameters passed into read_csv</p></dd>
+<dd><p>additional parameters passed into rio::import</p></dd>
 
 
 <dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
@@ -72,12 +72,18 @@ and title.  Other columns may be present.</p></dd>
     <p>the codingsystem object</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">naic2022</span> <span class="op">&lt;-</span> <span class="fu">codingsystem</span><span class="op">(</span><span class="st">"https://danielruss.github.io/codingsystems/naics2022_all.csv"</span>,name <span class="op">=</span> <span class="st">"naics2022"</span>,colClasses<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"character"</span>,<span class="fl">2</span><span class="op">)</span>,<span class="st">"integer"</span>,<span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"character"</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Daniel Russ.</p>
+  <p>Developed by Daniel E. Russ.</p>
 </div>
 
 <div class="pkgdown-footer-right">
