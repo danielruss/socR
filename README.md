@@ -1,6 +1,4 @@
-# ![](man/figures/logo.png){width="100px"}  socR    
-
-
+# socR
 
 [![Join the chat at https://gitter.im/daniel_socR/community](https://badges.gitter.im/daniel_socR/community.svg)](https://gitter.im/daniel_socR/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
