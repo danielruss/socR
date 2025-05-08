@@ -213,6 +213,12 @@ print.codingsystem <- function(x,...){
   invisible(x)
 }
 
+#' @export
+#' @importFrom dplyr pull
+pull.codingsystem <- function(data,var=-1,name=NULL,...){
+  dplyr::pull(data$table,!!rlang::enquo(var),!!rlang::enquo(name),...)
+}
+
 #' Create a coding system from a data frame
 #'
 #' @param x the data frame containing columns "code" and "title"
@@ -276,4 +282,37 @@ to_level <- function(codingsystem, level) {
     map_vec = dplyr::pull(codingsystem$table, {{col}}, name = code)
     return(unname(map_vec[codes]))
   }
+}
+
+
+#' Get the code Level
+#'
+#' Gets the levels for a vector of codes from a codingsystem
+#' The type returned depends on the data.
+#'
+#' @param data - a codingsystem
+#' @param codes - a vector of codes to check
+#'
+#' @returns a vector of Levels
+#' @export
+#'
+#' @examples
+#' level(soc1980_all,"99-99") # "division"
+#' level(soc2010_all,c("11-1011","11-2010")) # c(6,5)
+level <- function(data,codes) {
+  UseMethod("level")
+}
+#' @rdname level
+#' @export
+level.codingsystem <- function(data,codes){
+  if (!inherits(data,"codingsystem")) stop("Expected a 'codingsystem' object")
+  map <- data |> pull(Level,code)
+  map[codes]
+}
+
+#' @importFrom dplyr arrange
+#' @inherit dplyr::arrange
+#' @export
+arrange.codingsystem <- function (.data, ..., .by_group = FALSE) {
+  dplyr::arrange(.data$table, ..., .by_group = .by_group) |> as_codingsystem()
 }

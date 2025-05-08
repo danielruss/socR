@@ -284,3 +284,17 @@ xwalk_entropy <- function(x) {
     dplyr::pull(.data$entropy)
 }
 
+
+#' @inherit dplyr::filter
+#' @export
+filter.xwalk <- function (.data, ..., .by = NULL, .preserve = FALSE) {
+  data <- .data$data
+  dplyr::filter(data, ..., .by = .by, .preserve = .preserve) |> xwalk()
+}
+
+#' @importFrom dplyr arrange
+#' @inherit dplyr::arrange
+#' @export
+arrange.xwalk <- function (.data, ..., .by_group = FALSE) {
+  dplyr::arrange(.data$data, ..., .by_group = .by_group) |> xwalk()
+}
