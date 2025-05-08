@@ -6,6 +6,8 @@
 <url><loc>https://danielruss.github.io/socR/articles/index.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/authors.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/index.html</loc></url>
+<url><loc>https://danielruss.github.io/socR/reference/arrange.codingsystem.html</loc></url>
+<url><loc>https://danielruss.github.io/socR/reference/arrange.xwalk.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/as_codingsystem.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/codeJobHistory.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/codes.html</loc></url>
@@ -18,6 +20,7 @@
 <url><loc>https://danielruss.github.io/socR/reference/crosswalk_columns.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/dim.codingsystem.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/extend_standard_soc1980_codes.html</loc></url>
+<url><loc>https://danielruss.github.io/socR/reference/filter.xwalk.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/format.codingsystem.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/get_codes.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/head.codingsystem.html</loc></url>
@@ -27,6 +30,7 @@
 <url><loc>https://danielruss.github.io/socR/reference/is.xwalk.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/is_url.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/is_valid.html</loc></url>
+<url><loc>https://danielruss.github.io/socR/reference/level.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/load_socassign_db.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/lookup_code.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/make_code_str.html</loc></url>
