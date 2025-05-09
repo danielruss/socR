@@ -127,10 +127,11 @@ select.codingsystem <- function(.data,...){
 #' @param name name for the filtered coding system
 #' @importFrom dplyr filter
 #' @export
-filter.codingsystem <- function (.data, ..., name=NULL, .by = NULL, .preserve = FALSE) {
+filter.codingsystem <- function (.data, ...,.by = NULL, .preserve = FALSE, name=NULL) {
+  dots = rlang::enquos(...)
+  name= name %||% trimws(paste0("filtered ", .data$name))
   data <- .data$table
-  name <- ifelse(is.null(name),trimws(paste0("filtered ",.data$name)),name)
-  dplyr::filter(data, ..., .by = .by, .preserve = .preserve) |> as_codingsystem(name)
+  dplyr::filter(data, !!!dots, .by = .by, .preserve = .preserve) |> as_codingsystem(name)
 }
 
 #' @rdname codingsystem_dplyr
@@ -143,6 +144,13 @@ mutate.codingsystem <- function (.data, ...) {
   dplyr::mutate(data, ...) |> as_codingsystem(.data$name)
 }
 
+#' @rdname codingsystem_dplyr
+#' @importFrom dplyr mutate
+#' @param .by_group passed to dplyr::arrange
+#' @export
+arrange.codingsystem <- function (.data, ..., .by_group = FALSE) {
+  dplyr::arrange(.data$table, ..., .by_group = .by_group) |> as_codingsystem()
+}
 
 #' @rdname codingsystem_dplyr
 #' @importFrom dplyr as_tibble
@@ -150,6 +158,14 @@ mutate.codingsystem <- function (.data, ...) {
 as_tibble.codingsystem <- function(x,...,.rows=NULL,.name_repair=NULL,rownames=NULL){
   x$table
 }
+
+#' @importFrom dplyr count
+#' @rdname codingsystem_dplyr
+#' @export
+count.codingsystem <- function(x,...,wt = NULL, sort = FALSE, name = NULL){
+  dplyr::count(x$table,..., wt = NULL, sort = FALSE, name = NULL)
+}
+
 
 #' formats a codingsystem
 #'
@@ -215,8 +231,8 @@ print.codingsystem <- function(x,...){
 
 #' @export
 #' @importFrom dplyr pull
-pull.codingsystem <- function(data,var=-1,name=NULL,...){
-  dplyr::pull(data$table,!!rlang::enquo(var),!!rlang::enquo(name),...)
+pull.codingsystem <- function(.data,var=-1,name=NULL,...){
+  dplyr::pull(.data$table,!!rlang::enquo(var),!!rlang::enquo(name),...)
 }
 
 #' Create a coding system from a data frame
@@ -306,13 +322,8 @@ level <- function(data,codes) {
 #' @export
 level.codingsystem <- function(data,codes){
   if (!inherits(data,"codingsystem")) stop("Expected a 'codingsystem' object")
-  map <- data |> pull(Level,code)
+  map <- data$table |> pull(.data$Level,.data$code)
   map[codes]
 }
 
-#' @importFrom dplyr arrange
-#' @inherit dplyr::arrange
-#' @export
-arrange.codingsystem <- function (.data, ..., .by_group = FALSE) {
-  dplyr::arrange(.data$table, ..., .by_group = .by_group) |> as_codingsystem()
-}
+

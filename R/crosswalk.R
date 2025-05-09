@@ -285,16 +285,40 @@ xwalk_entropy <- function(x) {
 }
 
 
-#' @inherit dplyr::filter
+#' @rdname xwalk_dplyr
+#' @importFrom dplyr filter
+#' @inheritParams dplyr::filter
 #' @export
 filter.xwalk <- function (.data, ..., .by = NULL, .preserve = FALSE) {
   data <- .data$data
   dplyr::filter(data, ..., .by = .by, .preserve = .preserve) |> xwalk()
 }
 
+#' @rdname xwalk_dplyr
 #' @importFrom dplyr arrange
-#' @inherit dplyr::arrange
+#' @inheritParams dplyr::arrange
 #' @export
 arrange.xwalk <- function (.data, ..., .by_group = FALSE) {
   dplyr::arrange(.data$data, ..., .by_group = .by_group) |> xwalk()
 }
+
+#' @rdname xwalk_dplyr
+#' @importFrom tibble as_tibble
+#' @inheritParams tibble::as_tibble
+#' @export
+as_tibble.xwalk <-
+  function (x, ..., .rows = NULL,
+            .name_repair = c("check_unique", "unique", "universal", "minimal"),
+            rownames = pkgconfig::get_config("tibble::rownames", NULL) ){
+  x$data
+}
+
+
+#' @name dplyr verbs for crosswalks
+#' @title Using dplyr verbs with crosswalks
+#' @description
+#' These methods allow you to work with the underlying data within a crosswalk
+#' as if was a tibble.
+#' @param .data The crosswalk
+#' @rdname xwalk_dplyr
+NULL

@@ -4,27 +4,35 @@
 \alias{select.codingsystem}
 \alias{filter.codingsystem}
 \alias{mutate.codingsystem}
+\alias{arrange.codingsystem}
 \alias{as_tibble.codingsystem}
+\alias{count.codingsystem}
 \title{Use Coding system with dplyr}
 \usage{
 \method{select}{codingsystem}(.data, ...)
 
-\method{filter}{codingsystem}(.data, ..., name = NULL, .by = NULL, .preserve = FALSE)
+\method{filter}{codingsystem}(.data, ..., .by = NULL, .preserve = FALSE, name = NULL)
 
 \method{mutate}{codingsystem}(.data, ...)
 
+\method{arrange}{codingsystem}(.data, ..., .by_group = FALSE)
+
 \method{as_tibble}{codingsystem}(x, ..., .rows = NULL, .name_repair = NULL, rownames = NULL)
+
+\method{count}{codingsystem}(x, ..., wt = NULL, sort = FALSE, name = NULL)
 }
 \arguments{
 \item{.data}{the coding system}
 
 \item{...}{parts of the coding system}
 
-\item{name}{name for the filtered coding system}
-
 \item{.by}{passed to dplyr::filter}
 
 \item{.preserve}{passed to dplyr::filter}
+
+\item{name}{name for the filtered coding system}
+
+\item{.by_group}{passed to dplyr::arrange}
 
 \item{x}{the coding system}
 
