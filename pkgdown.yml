@@ -3,7 +3,7 @@ pkgdown: 2.1.2
 pkgdown_sha: ~
 articles:
   GettingStarted: GettingStarted.html
-last_built: 2025-05-08T21:32Z
+last_built: 2025-05-09T19:44Z
 urls:
   reference: https://danielruss.github.io/socR/reference
   article: https://danielruss.github.io/socR/articles

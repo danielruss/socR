@@ -6,8 +6,6 @@
 <url><loc>https://danielruss.github.io/socR/articles/index.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/authors.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/index.html</loc></url>
-<url><loc>https://danielruss.github.io/socR/reference/arrange.codingsystem.html</loc></url>
-<url><loc>https://danielruss.github.io/socR/reference/arrange.xwalk.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/as_codingsystem.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/codeJobHistory.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/codes.html</loc></url>
@@ -20,11 +18,9 @@
 <url><loc>https://danielruss.github.io/socR/reference/crosswalk_columns.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/dim.codingsystem.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/extend_standard_soc1980_codes.html</loc></url>
-<url><loc>https://danielruss.github.io/socR/reference/filter.xwalk.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/format.codingsystem.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/get_codes.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/head.codingsystem.html</loc></url>
-<url><loc>https://danielruss.github.io/socR/reference/hello.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/index.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/is.codingsystem.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/is.xwalk.html</loc></url>
@@ -38,6 +34,7 @@
 <url><loc>https://danielruss.github.io/socR/reference/noc2011_4digit.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/noc2011_all.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/print.codingsystem.html</loc></url>
+<url><loc>https://danielruss.github.io/socR/reference/reexports.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/soc1980_all.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/soc1980_detailed.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/soc1980_extended.html</loc></url>
@@ -51,6 +48,7 @@
 <url><loc>https://danielruss.github.io/socR/reference/to_list_column.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/valid_code.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/xwalk.html</loc></url>
+<url><loc>https://danielruss.github.io/socR/reference/xwalk_dplyr.html</loc></url>
 <url><loc>https://danielruss.github.io/socR/reference/xwalk_entropy.html</loc></url>
 </urlset>
 
