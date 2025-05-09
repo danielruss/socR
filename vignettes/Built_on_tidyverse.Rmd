@@ -1,0 +1,124 @@
+---
+title: "Built on tidyverse"
+author: Daniel Russ
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Built on tidyverse}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Occupational data is often nice and tabular, but sometimes you have data 
+that is not so nice.  If we have soccer results, we may only want to look at the
+top 3, and we may have 3 human coder results.  Instead of using having columns
+soc2010_1,score_1,soc2010_2,score_2... soc2010_n,score_n you may want to simply
+using List columns.  This is supported by data.frame and tibble.  This allows 
+us to put vectors as values.  One drawback is the you need to map when you mutate
+instead of having a simple function.
+
+If your are using socR, codingsystem and xwalks are built on top of tibbles.  I
+implemented some of the dplyr verbs on codingsystems and crosswalk, but if a verb
+does not exist you can get the underlying tibble using as_tibble().
+
+Lets make some fake data
+
+```{r setup, echo=TRUE,results='hide',message=FALSE}
+library(socR)
+library(tidyverse)
+```
+
+```{r}
+results <- tibble(id=c("job-1","job-2","job-3"),
+                  JobTitle=c("tv repairman","home plumber","fire fighter"),
+                  JobTask =c("fix tvs","various plumbing work","put out fires, EMS"),
+                  soc2010_1 = c("49-2097","47-2152","33-2011"),
+                  soc2010_2 = c("49-9099","47-3015","33-1021"),
+                  soc2010_3 = c("49-9031","49-9071","55-3019"),
+                  score_1 = c(0.9199,0.9866,0.9903),
+                  score_2 = c(0.0888,0.1003,0.0132),
+                  score_3 = c(0.0159,0.0337,0.0113) )
+results
+```
+
+Let combine the soccer results and the soccer scores.
+```{r}
+results <- results |> 
+  mutate(soc2010_soccer=pmap(pick(starts_with("soc2010_")),\(...) c(...) ),
+         scores_soccer =pmap(pick(starts_with("score_")),\(...) c(...) )
+        ) |>
+  select(id:JobTask,soc2010_soccer,scores_soccer)
+
+results
+```
+
+Now lets make some fake human coder results
+```{r}
+coder <- tibble(id=c("job-1","job-2","job-3"),
+                JobTitle=c("tv repairman","home plumber","fire fighter"),
+                JobTask =c("fix tvs","various plumbing work","put out fires, EMS"),
+                soc2010_1 = c("49-2097","47-2152","33-2011"),
+                soc2010_2 = c("","46-130",NA),
+                soc2010_3 = c(NA,NA,NA) )
+coder
+```
+
+
+Lets make sure that the human coder gave real codes.  The socR package comes 
+with a predefined function is_valid_6digit_soc2010, let's not use it but reinvent it.
+We will use the soc2010 coding system that comes with socR
+
+```{r}
+is_valid_6digit_soc2010 <- valid_code( filter(soc2010_all,Level==6) )
+coder |> mutate( across(c(starts_with("soc2010_")),is_valid_6digit_soc2010))
+```
+
+
+Lets combine all the results so that the codes are valid
+```{r}
+coder <- coder |> mutate(
+  soc2010_coder= pmap( pick(starts_with("soc2010_")),\(...){
+    codes = c(...)
+    codes = codes[is_valid_6digit_soc2010(codes)]
+  } ) ) |>
+  select(id,soc2010_coder)
+```
+
+Now we can join the soccer results and the coder results.
+```{r}
+combined_results <- left_join(results,coder,by="id")
+combined_results 
+```
+
+Lets see how soccer did with these jobs. Since there are 3 SOCcer 
+results the rank can be 1,2,3,or 4+.  Let's make this an ordered factor with
+levels "1","2","3","4+"
+```{r}
+factor_levels <- 1:4
+factor_labels <- c(1:3,"4+")
+combined_results |> 
+  mutate(rank= map2_int(soc2010_coder,soc2010_soccer,\(x,y)min(match(x,y)) ),
+         rank=ordered(rank,factor_levels,factor_labels))
+```
+
+
+I hope you see how we can use the list columns and the purrr::map family to handle
+the case of multiple results.  If you do not like map, you may be able to use 
+`dplyr::rowwise` to handle the lists.  
+
+When you are ready to write out the data, you probably don't want to use csv format.
+I suggest using `jsonlite::write_json` or if you are adventurous use 
+`arrow::write_feather`
+
+
+
+
+
+
