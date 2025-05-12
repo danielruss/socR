@@ -6,6 +6,7 @@ output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Built on tidyverse}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteDepends{ggplot2}
   %\VignetteEncoding{UTF-8}
 ---
 
