@@ -2,8 +2,9 @@ pandoc: 3.1.11
 pkgdown: 2.1.2
 pkgdown_sha: ~
 articles:
+  Built_on_tidyverse: Built_on_tidyverse.html
   GettingStarted: GettingStarted.html
-last_built: 2025-05-09T19:44Z
+last_built: 2025-05-12T20:36Z
 urls:
   reference: https://danielruss.github.io/socR/reference
   article: https://danielruss.github.io/socR/articles
