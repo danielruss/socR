@@ -187,11 +187,13 @@ codes <- function(x,code_column){
 #' @param invert by default the crosswalk goes from codes1 to
 #' codes2 setting invert to TRUE make the crosswalk go from codes2
 #' to codes1
+#' @param unlist instead of returning a list, return an unamed vector
+#' use it when crosswalking a dataframe column with mutate
 #'
 #' @return an unnamed list of codes in the resulting coding system
 #' @export
 #'
-crosswalk <- function(codes,xwalk,invert=FALSE){
+crosswalk <- function(codes,xwalk,invert=FALSE,unlist=FALSE){
   if (!is.xwalk(xwalk)){
     stop("crosswalk needs either a crosswalk object")
   }
@@ -200,7 +202,12 @@ crosswalk <- function(codes,xwalk,invert=FALSE){
   map_to_use = xwalk$map
   if (invert) map_to_use = xwalk$inverse_map
 
-  map_to_use[codes]
+  result=map_to_use[codes]
+  if (unlist) {
+    result = unname(unlist(result))
+  }
+
+  result
 }
 
 #' Crosswalk multiple columns in a tibble/data frame

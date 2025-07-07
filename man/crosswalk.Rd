@@ -5,7 +5,7 @@
 \title{Use the concordance table (crosswalk) to convert from one
 coding system to another.}
 \usage{
-crosswalk(codes, xwalk, invert = FALSE)
+crosswalk(codes, xwalk, invert = FALSE, unlist = FALSE)
 }
 \arguments{
 \item{codes}{the vector of codes that will be crosswalked}
@@ -15,6 +15,9 @@ crosswalk(codes, xwalk, invert = FALSE)
 \item{invert}{by default the crosswalk goes from codes1 to
 codes2 setting invert to TRUE make the crosswalk go from codes2
 to codes1}
+
+\item{unlist}{instead of returning a list, return an unamed vector
+use it when crosswalking a dataframe column with mutate}
 }
 \value{
 an unnamed list of codes in the resulting coding system
