@@ -59,7 +59,8 @@ to_list_column <- function(df,colname,...){
 #' @returns the center of the score bin for all scores
 #' @export
 #'
-bin_center <- function(score,n_bins){
+bin_center <- function(score,n_bins=0){
+  if (any(score<0) | any(score>1)) stop("all score must be between 0-1")
   if(n_bins<2) stop("you must have at least 2 bins")
   binwidth = 1/n_bins
   floor(score/binwidth)*binwidth+binwidth/2
