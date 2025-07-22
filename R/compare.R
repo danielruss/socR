@@ -46,3 +46,21 @@ to_list_column <- function(df,colname,...){
   df <- df |> dplyr::mutate({{colname}} := purrr::pmap(col_values,\(...) {r=unique(c(...));r[!is.na(r)]}) )
   df |> dplyr::select(-c(...))
 }
+
+
+#' Bin Score and Assign center value
+#' @description
+#' The \code{bin_center()} function takes a vector of scores between 0-1 and
+#' a number of bins an returns the center of the bin the score falls in.
+#'
+#' @param score The scores (values from 0-1) that are being binned
+#' @param n_bins the number of bins the score
+#'
+#' @returns the center of the score bin for all scores
+#' @export
+#'
+bin_center <- function(score,n_bins){
+  if(n_bins<2) stop("you must have at least 2 bins")
+  binwidth = 1/n_bins
+  floor(score/binwidth)*binwidth+binwidth/2
+}
