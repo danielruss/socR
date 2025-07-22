@@ -60,8 +60,11 @@ to_list_column <- function(df,colname,...){
 #' @export
 #'
 bin_center <- function(score,n_bins=0){
-  if (any(score<0) | any(score>1)) stop("all score must be between 0-1")
   if(n_bins<2) stop("you must have at least 2 bins")
+  if (any(score<1e-9) | any(score>1-1e-9)) {
+    warning("Scores must be between 0-1.  You have a score<1e-9 or >1-1e-9, the score is being truncated")
+  }
+  score=pmin(pmax(score,1e-9),1-1e-9)
   binwidth = 1/n_bins
   floor(score/binwidth)*binwidth+binwidth/2
 }
