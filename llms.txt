@@ -1,0 +1,140 @@
+# socR
+
+[![R-universe
+status](https://danielruss.r-universe.dev/badges/socR)](https://danielruss.r-universe.dev/socR)
+
+[![Join the chat at
+https://gitter.im/daniel_socR/community](https://badges.gitter.im/daniel_socR/community.svg)](https://gitter.im/daniel_socR/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+An R package used to analyze SOCcer results
+
+socR is centered around codingsystems and crosswalking between
+codingsystems. It’s still in development so it is likely to change
+often.
+
+[Have a problem?](https://github.com/danielruss/socR/issues)
+
+## How to install
+
+if you don’t have the devtools package installed, install that first…
+
+    install.packages("devtools)
+
+then
+
+    library(devtools)
+    install_github("danielruss/socR")
+
+# Package index
+
+## All functions
+
+- [`as_codingsystem()`](https://danielruss.github.io/socR/reference/as_codingsystem.md)
+  : Create a coding system from a data frame
+- [`bin_center()`](https://danielruss.github.io/socR/reference/bin_center.md)
+  : Bin Score and Assign center value
+- [`codeJobHistory()`](https://danielruss.github.io/socR/reference/codeJobHistory.md)
+  : Auto-code job results with SOCcer using via the soccer API
+- [`codes()`](https://danielruss.github.io/socR/reference/codes.md) :
+  get the codes for a crosswalk,
+- [`codesAgree()`](https://danielruss.github.io/socR/reference/codesAgree.md)
+  : Check if codes agree with reviewer
+- [`codingsystem()`](https://danielruss.github.io/socR/reference/codingsystem.md)
+  : constructor create a coding system S3 class
+- [`select(`*`<codingsystem>`*`)`](https://danielruss.github.io/socR/reference/codingsystem_dplyr.md)
+  [`filter(`*`<codingsystem>`*`)`](https://danielruss.github.io/socR/reference/codingsystem_dplyr.md)
+  [`mutate(`*`<codingsystem>`*`)`](https://danielruss.github.io/socR/reference/codingsystem_dplyr.md)
+  [`arrange(`*`<codingsystem>`*`)`](https://danielruss.github.io/socR/reference/codingsystem_dplyr.md)
+  [`as_tibble(`*`<codingsystem>`*`)`](https://danielruss.github.io/socR/reference/codingsystem_dplyr.md)
+  [`count(`*`<codingsystem>`*`)`](https://danielruss.github.io/socR/reference/codingsystem_dplyr.md)
+  : Use Coding system with dplyr
+- [`combine_crosswalks()`](https://danielruss.github.io/socR/reference/combine_crosswalks.md)
+  : Combine two crosswalks to produce a new crosswalk
+- [`createMultiHotEncoder()`](https://danielruss.github.io/socR/reference/createMultiHotEncoder.md)
+  : creates a multihot encoder from a list of labels
+- [`crosswalk()`](https://danielruss.github.io/socR/reference/crosswalk.md)
+  : Use the concordance table (crosswalk) to convert from one coding
+  system to another.
+- [`crosswalk_columns()`](https://danielruss.github.io/socR/reference/crosswalk_columns.md)
+  : Crosswalk multiple columns in a tibble/data frame
+- [`dim(`*`<codingsystem>`*`)`](https://danielruss.github.io/socR/reference/dim.codingsystem.md)
+  : Dimensions of an Object
+- [`extend_standard_soc1980_codes()`](https://danielruss.github.io/socR/reference/extend_standard_soc1980_codes.md)
+  : Extended SOC 1980 codes
+- [`format(`*`<codingsystem>`*`)`](https://danielruss.github.io/socR/reference/format.codingsystem.md)
+  : formats a codingsystem
+- [`get_codes()`](https://danielruss.github.io/socR/reference/get_codes.md)
+  : Get a list of codes from a coding system
+- [`head(`*`<codingsystem>`*`)`](https://danielruss.github.io/socR/reference/head.codingsystem.md)
+  : Return the First or Last Parts of an Object
+- [`is.codingsystem()`](https://danielruss.github.io/socR/reference/is.codingsystem.md)
+  : checks if an object is a coding system
+- [`is.xwalk()`](https://danielruss.github.io/socR/reference/is.xwalk.md)
+  : checks if an object is a crosswalk
+- [`is_url()`](https://danielruss.github.io/socR/reference/is_url.md) :
+  Check if a value is a url by looking for the http(s):// .Works with
+  vectors...
+- [`is_valid()`](https://danielruss.github.io/socR/reference/is_valid.md)
+  : Check if a set of codes are valid for a coding system
+- [`level()`](https://danielruss.github.io/socR/reference/level.md) :
+  Get the code Level
+- [`load_socassign_db()`](https://danielruss.github.io/socR/reference/load_socassign_db.md)
+  : load_socassign_db
+- [`lookup_code()`](https://danielruss.github.io/socR/reference/lookup_code.md)
+  : Look up code
+- [`make_code_str()`](https://danielruss.github.io/socR/reference/make_code_str.md)
+  : convert a list column of codes to vector of string for display
+- [`name()`](https://danielruss.github.io/socR/reference/name.md) :
+  Returns the user assigned name of the coding system
+- [`noc2011_4digit`](https://danielruss.github.io/socR/reference/noc2011_4digit.md)
+  : noc2011 4 digit classification system
+- [`noc2011_all`](https://danielruss.github.io/socR/reference/noc2011_all.md)
+  : noc2011 4 digit classification system
+- [`print(`*`<codingsystem>`*`)`](https://danielruss.github.io/socR/reference/print.codingsystem.md)
+  : prints a codingsystem
+- [`soc1980_all`](https://danielruss.github.io/socR/reference/soc1980_all.md)
+  : SOC 1980 complete classification system
+- [`soc1980_detailed`](https://danielruss.github.io/socR/reference/soc1980_detailed.md)
+  : Detailed SOC 1980 classification system
+- [`soc1980_extended`](https://danielruss.github.io/socR/reference/soc1980_extended.md)
+  : Extended SOC 1980 complete classification system
+- [`soc2010_6digit`](https://danielruss.github.io/socR/reference/soc2010_6digit.md)
+  : soc2010 6 digit classification system
+- [`soc2010_all`](https://danielruss.github.io/socR/reference/soc2010_all.md)
+  : Complete SOC 2010 classification system
+- [`soc2018_all`](https://danielruss.github.io/socR/reference/soc2018_all.md)
+  : Complete SOC 2018 classification system
+- [`split_data()`](https://danielruss.github.io/socR/reference/split_data.md)
+  : Split data
+- [`standardize_soc1980_codes()`](https://danielruss.github.io/socR/reference/standardize_soc1980_codes.md)
+  : Standardize US SOC 1980 codes
+- [`tail(`*`<codingsystem>`*`)`](https://danielruss.github.io/socR/reference/tail.codingsystem.md)
+  : Return the First or Last Parts of an Object
+- [`to_level()`](https://danielruss.github.io/socR/reference/to_level.md)
+  : to_level
+- [`to_list_column()`](https://danielruss.github.io/socR/reference/to_list_column.md)
+  : Create a list column from multiple columns
+- [`valid_code()`](https://danielruss.github.io/socR/reference/valid_code.md)
+  [`is_valid_6digit_soc2010()`](https://danielruss.github.io/socR/reference/valid_code.md)
+  [`is_valid_soc1980()`](https://danielruss.github.io/socR/reference/valid_code.md)
+  [`is_most_detailed_soc1980()`](https://danielruss.github.io/socR/reference/valid_code.md)
+  [`is_valid_extended_soc1980()`](https://danielruss.github.io/socR/reference/valid_code.md)
+  [`is_most_detailed_extended_soc1980()`](https://danielruss.github.io/socR/reference/valid_code.md)
+  : Is valid code
+- [`xwalk()`](https://danielruss.github.io/socR/reference/xwalk.md) :
+  xwalk class constructor
+- [`filter(`*`<xwalk>`*`)`](https://danielruss.github.io/socR/reference/xwalk_dplyr.md)
+  [`arrange(`*`<xwalk>`*`)`](https://danielruss.github.io/socR/reference/xwalk_dplyr.md)
+  [`as_tibble(`*`<xwalk>`*`)`](https://danielruss.github.io/socR/reference/xwalk_dplyr.md)
+  : Using dplyr verbs with crosswalks
+- [`xwalk_entropy()`](https://danielruss.github.io/socR/reference/xwalk_entropy.md)
+  : Calculates the Shannon entropy for a Crosswalk
+
+# Articles
+
+### All vignettes
+
+- [Built on
+  tidyverse](https://danielruss.github.io/socR/articles/Built_on_tidyverse.md):
+- [Getting Started with
+  socR](https://danielruss.github.io/socR/articles/GettingStarted.md):
