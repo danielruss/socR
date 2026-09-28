@@ -8,12 +8,12 @@
 ## Citation
 
 Russ DE (2026). *socR: Useful functions for working with occupation
-coding*. R package version 0.8.1, <https://danielruss.github.io/socR/>.
+coding*. R package version 0.8.2, <https://danielruss.github.io/socR/>.
 
     @Manual{,
       title = {socR: Useful functions for working with occupation coding},
       author = {Daniel E. Russ},
       year = {2026},
-      note = {R package version 0.8.1},
+      note = {R package version 0.8.2},
       url = {https://danielruss.github.io/socR/},
     }
