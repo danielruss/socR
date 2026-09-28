@@ -38,9 +38,10 @@ nrow0 <- function(x) dim(x)[1]
 ncol0 <- function(x) dim(x)[2]
 }
 \references{
-Becker, R. A., Chambers, J. M. and Wilks, A. R. (1988)
-  \emph{The New S Language}.
-  Wadsworth & Brooks/Cole.
+{\if{html}{\out{<span id="reference+dim.Rd+R+3ABecker+2BChambers+2BWilks+3A1988"></span>}}Becker RA, Chambers JM, Wilks AR (1988).
+\emph{The New S Language}.
+Chapman and Hall/CRC, London.
+ISBN 053409192X.}
 }
 \seealso{
 \code{\link[base]{ncol}}, \code{\link[base]{nrow}} and \code{\link[base]{dimnames}}.

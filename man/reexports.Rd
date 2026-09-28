@@ -16,8 +16,8 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{dplyr}{\code{\link[dplyr]{arrange}}, \code{\link[dplyr]{count}}, \code{\link[dplyr]{filter}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}}
+  \item{dplyr}{\code{\link[dplyr:arrange]{arrange()}}, \code{\link[dplyr:count]{count()}}, \code{\link[dplyr:filter]{filter()}}, \code{\link[dplyr:mutate]{mutate()}}, \code{\link[dplyr:select]{select()}}}
 
-  \item{tibble}{\code{\link[tibble]{as_tibble}}}
+  \item{tibble}{\code{\link[tibble:as_tibble]{as_tibble()}}}
 }}
 

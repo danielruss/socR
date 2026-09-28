@@ -4,7 +4,7 @@
 \alias{bin_center}
 \title{Bin Score and Assign center value}
 \usage{
-bin_center(score, n_bins)
+bin_center(score, n_bins = 0)
 }
 \arguments{
 \item{score}{The scores (values from 0-1) that are being binned}
