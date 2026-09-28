@@ -65,6 +65,8 @@
   : noc2011 4 digit classification system
 - [`print(`*`<codingsystem>`*`)`](https://danielruss.github.io/socR/reference/print.codingsystem.md)
   : prints a codingsystem
+- [`siblings()`](https://danielruss.github.io/socR/reference/siblings.md)
+  : Find sibling codes within a hierarchical coding system
 - [`soc1980_all`](https://danielruss.github.io/socR/reference/soc1980_all.md)
   : SOC 1980 complete classification system
 - [`soc1980_detailed`](https://danielruss.github.io/socR/reference/soc1980_detailed.md)

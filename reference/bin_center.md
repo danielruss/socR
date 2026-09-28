@@ -6,7 +6,7 @@ number of bins an returns the center of the bin the score falls in.
 ## Usage
 
 ``` r
-bin_center(score, n_bins)
+bin_center(score, n_bins = 0)
 ```
 
 ## Arguments
