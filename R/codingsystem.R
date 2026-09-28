@@ -95,6 +95,78 @@ lookup_code<-function(x,system){
   system$table$title[match(x,system$table$code)]
 }
 
+
+#' Find sibling codes within a hierarchical coding system
+#'
+#' Given a code from a hierarchical coding system (e.g. NOC or SOC), returns
+#' all other codes that share the same immediate parent. If the target code
+#' has no siblings at its own level (i.e. it is an "only child"), the
+#' function falls back to returning first cousins -- codes at the same
+#' level that share the same grandparent instead.
+#'
+#' @param target_code A character string giving the code to find siblings
+#'   for. Must be a valid code within \code{system}.
+#' @param system A \code{codingsystem} object (as validated by
+#'   \code{is.codingsystem}) containing a \code{table} element with, at
+#'   minimum, \code{code} and \code{parent} columns.
+#'
+#' @return A character vector of sibling (or, failing that, first-cousin)
+#'   codes. Returns \code{character(0)} if \code{target_code} has no parent,
+#'   or if it has no parent and no grandparent from which cousins could be
+#'   derived.
+#'
+#' @details
+#' The search proceeds in two steps:
+#' \enumerate{
+#'   \item \strong{Siblings}: codes sharing \code{target_code}'s immediate
+#'     parent (excluding \code{target_code} itself).
+#'   \item \strong{Cousins}: if no siblings are found, codes sharing a
+#'     parent with \code{target_code}'s parent (i.e. sharing a grandparent),
+#'     excluding the parent itself. Because these are children of the
+#'     parent's own siblings, they are automatically at the same
+#'     hierarchical level as \code{target_code}.
+#' }
+#' The function does not climb beyond the grandparent level; if no
+#' siblings or cousins are found there, it returns \code{character(0)}.
+#'
+#' @examples
+#' \dontrun{
+#' siblings("0013", noc2011_all)  # same-parent siblings
+#' siblings("0311", noc2011_all)  # falls back to cousins, since 0311
+#'                                 # is an only child under its parent
+#' }
+#'
+#' @export
+siblings <- function(target_code,system){
+  stopifnot(is.codingsystem(system))
+  stopifnot(is_valid(target_code,system))
+
+  ## get the target code's level and parent
+  tbl <- system$table
+  target_code_rows <- tbl |> dplyr::filter(code==target_code)
+  parent_code <- as.character(target_code_rows$parent)
+
+  # no parent.. no siblings...
+  if (!is_valid(parent_code,system)){
+    return(character(0))
+  }
+
+  # siblings have the same parent....
+  sibs <- tbl[tbl$parent==parent_code & !is.na(tbl$parent) & tbl$code != target_code,]$code
+  if (length(sibs) > 0) return(sibs)
+
+  ## there are no siblings.. look for first-cousins - same grandparent
+  parent_code_row <- tbl |> dplyr::filter(code==parent_code)
+  grandparent_code <- as.character(parent_code_row$parent)
+  if (!is_valid(grandparent_code,system)){
+    return(character(0))
+  }
+  parent_sibs <- tbl[tbl$parent == grandparent_code & !is.na(tbl$parent) & tbl$code != parent_code, ]$code
+  cousins <- tbl[tbl$parent %in% parent_sibs,]$code
+
+  cousins
+}
+
 #' Use Coding system with dplyr
 #'
 #' @description
@@ -325,5 +397,4 @@ level.codingsystem <- function(data,codes){
   map <- data$table |> pull(.data$Level,.data$code)
   map[codes]
 }
-
 
