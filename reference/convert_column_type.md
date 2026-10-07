@@ -20,8 +20,9 @@ convert_column_type(x, col, type)
 
 - col:
 
-  A character string giving the name of the column in `x$table` to
-  convert.
+  An unquoted column name in `x$table` to convert. A quoted column name
+  is also accepted. To supply a name stored in a variable, use `!!`, for
+  example `!!column_name`.
 
 - type:
 
@@ -33,3 +34,13 @@ convert_column_type(x, col, type)
 
 A `codingsystem` object with the specified column in `table` converted
 to the requested type.
+
+## Examples
+
+``` r
+cs <- codingsystem(data.frame(code = "1", title = "Example", Level = "2"))
+convert_column_type(cs, Level, "integer")
+#> # Coding System:  
+#>  Example
+#> 2 
+```
