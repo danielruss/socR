@@ -36,6 +36,9 @@ codingsystem <- function(codes,titles,...,name=""){
 
     if ( length(codes)==1 && (is_url(codes) || file.exists(codes)) ){
       codes <- rio::import(codes,setclass="tbl",...)
+      #if ("Level" %in% names(codes)) {
+      #  codes <- codes |> dplyr::mutate(Level = as.integer(Level))
+      #}
     }
     if (is.data.frame(codes) && all(c("code","title") %in% colnames(codes)) ){
       obj$table <- codes
@@ -398,3 +401,34 @@ level.codingsystem <- function(data,codes){
   map[codes]
 }
 
+#' Convert a column to a specified type
+#'
+#' Convert a column in \code{x$table} to a base R type and return the
+#' updated coding system.
+#'
+#' @param x A \code{codingsystem} object.
+#' @param col A character string giving the name of the column in
+#'   \code{x$table} to convert.
+#' @param type A character string specifying the target type: one of
+#'   \code{"integer"}, \code{"character"}, \code{"double"}, or
+#'   \code{"logical"}. Unambiguous abbreviations are accepted.
+#'
+#' @return A \code{codingsystem} object with the specified column in
+#'   \code{table} converted to the requested type.
+#' @export
+convert_column_type <- function(x,col,type) UseMethod("convert_column_type")
+
+#' @rdname convert_column_type
+#' @export
+convert_column_type.codingsystem <- function(x,col,type){
+  type <- match.arg(type, c("integer","character","double","logical"))
+
+  x$table[[col]] <- switch(type,
+    integer = as.integer(x$table[[col]]),
+    character = as.character(x$table[[col]]),
+    double = as.numeric(x$table[[col]]),
+    logical = as.logical(x$table[[col]])
+  )
+
+  x
+}
