@@ -50,6 +50,8 @@ then
   : Use Coding system with dplyr
 - [`combine_crosswalks()`](https://danielruss.github.io/socR/reference/combine_crosswalks.md)
   : Combine two crosswalks to produce a new crosswalk
+- [`convert_column_type()`](https://danielruss.github.io/socR/reference/convert_column_type.md)
+  : Convert a column to a specified type
 - [`createMultiHotEncoder()`](https://danielruss.github.io/socR/reference/createMultiHotEncoder.md)
   : creates a multihot encoder from a list of labels
 - [`crosswalk()`](https://danielruss.github.io/socR/reference/crosswalk.md)
