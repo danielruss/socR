@@ -12,8 +12,9 @@ convert_column_type(x, col, type)
 \arguments{
 \item{x}{A \code{codingsystem} object.}
 
-\item{col}{A character string giving the name of the column in
-\code{x$table} to convert.}
+\item{col}{An unquoted column name in \code{x$table} to convert.
+A quoted column name is also accepted. To supply a name stored in a
+variable, use \code{!!}, for example \code{!!column_name}.}
 
 \item{type}{A character string specifying the target type: one of
 \code{"integer"}, \code{"character"}, \code{"double"}, or
@@ -26,4 +27,8 @@ A \code{codingsystem} object with the specified column in
 \description{
 Convert a column in \code{x$table} to a base R type and return the
 updated coding system.
+}
+\examples{
+cs <- codingsystem(data.frame(code = "1", title = "Example", Level = "2"))
+convert_column_type(cs, Level, "integer")
 }

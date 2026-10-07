@@ -407,20 +407,26 @@ level.codingsystem <- function(data,codes){
 #' updated coding system.
 #'
 #' @param x A \code{codingsystem} object.
-#' @param col A character string giving the name of the column in
-#'   \code{x$table} to convert.
+#' @param col An unquoted column name in \code{x$table} to convert.
+#'   A quoted column name is also accepted. To supply a name stored in a
+#'   variable, use \code{!!}, for example \code{!!column_name}.
 #' @param type A character string specifying the target type: one of
 #'   \code{"integer"}, \code{"character"}, \code{"double"}, or
 #'   \code{"logical"}. Unambiguous abbreviations are accepted.
 #'
 #' @return A \code{codingsystem} object with the specified column in
 #'   \code{table} converted to the requested type.
+#'
+#' @examples
+#' cs <- codingsystem(data.frame(code = "1", title = "Example", Level = "2"))
+#' convert_column_type(cs, Level, "integer")
 #' @export
 convert_column_type <- function(x,col,type) UseMethod("convert_column_type")
 
 #' @rdname convert_column_type
 #' @export
 convert_column_type.codingsystem <- function(x,col,type){
+  col <- rlang::as_name(rlang::ensym(col))
   type <- match.arg(type, c("integer","character","double","logical"))
 
   x$table[[col]] <- switch(type,
